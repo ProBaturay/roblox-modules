@@ -1,3 +1,4 @@
+--15:51 UTC+3 2021/07/12
 --!strict
 
 type TextObject = TextLabel | TextBox | TextButton
@@ -645,17 +646,27 @@ LowerScaleButton.Activated:Connect(function()
 	UpperScaleButton.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 end)
 
-local temporaryScreenGui = Instance.new("ScreenGui")
-temporaryScreenGui.Parent = StarterGui
-
-local temporaryFrame = Instance.new("Frame")
-temporaryFrame.Active = false
-temporaryFrame.BackgroundTransparency = 1
-temporaryFrame.Size = UDim2.new(1, 0, 1, 0)
-temporaryFrame.Position = UDim2.new(10, 0, 10, 0)
-temporaryFrame.Parent = temporaryScreenGui
-
 local function getViewportSize()
+	local camera = workspace:FindFirstChild("Camera")
+
+	if camera then
+		return camera.ViewportSize
+	end
+	
+	local temporaryScreenGui = Instance.new("ScreenGui")
+	temporaryScreenGui.Parent = StarterGui
+
+	local temporaryFrame = Instance.new("Frame")
+	temporaryFrame.Active = false
+	temporaryFrame.BackgroundTransparency = 1
+	temporaryFrame.Size = UDim2.new(1, 0, 1, 0)
+	temporaryFrame.Position = UDim2.new(10, 0, 10, 0)
+	temporaryFrame.Parent = temporaryScreenGui
+	
+	task.defer(function()
+		temporaryScreenGui:Destroy()
+	end)
+	
 	return temporaryFrame.AbsoluteSize
 end
 
@@ -671,7 +682,7 @@ local function scaleAll(enable: boolean)
 				local parent = v.Parent
 				
 				if not (parent and parent:IsA("GuiObject")) then 
-					return 
+					return
 				end
 				
 				v:SetAttribute("ScaleType", CURRENT_SCALE_TYPE)
