@@ -8,6 +8,8 @@ local LogService = game:GetService("LogService")
 local SCALING_WARNINGTEXT = "Scaling must be done on studio."
 local TEXTSIZE_METHOD = "GetTextSize"
 
+local contextual_text_flag = false
+
 local function isTextObject(object: TextObject)
 	return object:IsA("TextLabel") or object:IsA("TextButton") or object:IsA("TextBox")
 end
@@ -68,7 +70,9 @@ local function onAdded(UIStroke: UIStroke)
 								if UIStroke.ApplyStrokeMode == Enum.ApplyStrokeMode.Contextual then
 									if TEXTSIZE_METHOD == "GetTextSize" then
 										absoluteSizeChanged = parent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
-											UIStroke.Thickness = determineDimension(scaleType) * UIStroke:GetAttribute(scaleType)
+											if contextual_text_flag then
+												UIStroke.Thickness = determineDimension(scaleType) * UIStroke:GetAttribute(scaleType)
+											end
 										end)
 									else
 
