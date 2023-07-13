@@ -15,8 +15,9 @@ local Selection = game:GetService("Selection")
 local Players = game:GetService("Players")
 local StarterGui = game:GetService("StarterGui")
 
-assert(not (RunService:IsRunning()), "This script should be used as a plugin.")
-warn("Scale UIStroke Thickness plugin was installed. Thank you!")
+if RunService:IsRunning() then
+	return
+end
 
 local plugin = plugin or getfenv().PluginManager():CreatePlugin()
 plugin.Name = "UIStrokeScalingPlugin"
@@ -73,7 +74,6 @@ end
 local function onAdded(UIStroke: UIStroke)
 	pcall(function()
 		if UIStroke and UIStroke:IsA("UIStroke") then
-			print(UIStroke:GetFullName())
 			if UIStroke:GetAttribute("Scaled") ~= true then
 				UIStroke:SetAttribute("Scaled", true)
 				
@@ -99,14 +99,8 @@ local function onAdded(UIStroke: UIStroke)
 						local a, b = vector2.X, vector2.Y
 						return if condition == "LowerScale" then (if a > b then b else a) else (if a > b then a else b)
 					end
-					
-					--local function getScale()
-					--	return desiredThickness / determineLowerSize()
-					--end
 
 					local function update()
-						print(UIStroke:GetFullName())
-
 						if absoluteSizeChanged and absoluteSizeChanged.Connected then
 							absoluteSizeChanged:Disconnect()
 						end
