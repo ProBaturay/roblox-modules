@@ -1,2 +1,2 @@
-# derived-lua-functions
-Potentially beneficial for those who needed to write their own functions, taking inspiration from the main built-in functions.
+# lua-modules
+Essentially created for people who write in Luau, which is derived from Lua, generally used for Roblox programming.
