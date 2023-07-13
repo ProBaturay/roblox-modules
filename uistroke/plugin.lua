@@ -3,6 +3,7 @@
 
 type TextObject = TextLabel | TextBox | TextButton
 
+local contextual_text_flag = false
 local CURRENT_SCALE_TYPE = "UpperScale"
 local TESTING_PROCESS = false
 local TEXTSIZE_METHOD = "GetTextSize"
@@ -68,6 +69,8 @@ local LogService = game:GetService("LogService")
 local SCALING_WARNINGTEXT = "Scaling must be done on studio."
 local TEXTSIZE_METHOD = "GetTextSize"
 
+local contextual_text_flag = false
+
 local function isTextObject(object: TextObject)
 	return object:IsA("TextLabel") or object:IsA("TextButton") or object:IsA("TextBox")
 end
@@ -75,6 +78,7 @@ end
 local function onAdded(UIStroke: UIStroke)
 	pcall(function()
 		if UIStroke and UIStroke:IsA("UIStroke") then
+			print(UIStroke:GetFullName())
 			if UIStroke:GetAttribute("Scaled") ~= true then
 				UIStroke:SetAttribute("Scaled", true)
 				
@@ -100,8 +104,14 @@ local function onAdded(UIStroke: UIStroke)
 						local a, b = vector2.X, vector2.Y
 						return if condition == "LowerScale" then (if a > b then b else a) else (if a > b then a else b)
 					end
+					
+					--local function getScale()
+					--	return desiredThickness / determineLowerSize()
+					--end
 
 					local function update()
+						print(UIStroke:GetFullName())
+
 						if absoluteSizeChanged and absoluteSizeChanged.Connected then
 							absoluteSizeChanged:Disconnect()
 						end
@@ -121,7 +131,9 @@ local function onAdded(UIStroke: UIStroke)
 								if UIStroke.ApplyStrokeMode == Enum.ApplyStrokeMode.Contextual then
 									if TEXTSIZE_METHOD == "GetTextSize" then
 										absoluteSizeChanged = parent:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
-											UIStroke.Thickness = determineDimension(scaleType) * UIStroke:GetAttribute(scaleType)
+											if contextual_text_flag then
+												UIStroke.Thickness = determineDimension(scaleType) * UIStroke:GetAttribute(scaleType)
+											end
 										end)
 									else
 
@@ -705,8 +717,10 @@ local function scaleAll(enable: boolean)
 				else
 					if isTextObject(parent :: TextObject) then
 						if TEXTSIZE_METHOD == "GetTextSize" then
-							v:SetAttribute("LowerScale", v.Thickness / determineDimensionForText("LowerScale"))
-							v:SetAttribute("UpperScale", v.Thickness / determineDimensionForText("UpperScale"))
+							if contextual_text_flag then
+								v:SetAttribute("LowerScale", v.Thickness / determineDimensionForText("LowerScale"))
+								v:SetAttribute("UpperScale", v.Thickness / determineDimensionForText("UpperScale"))
+							end
 						end
 					else
 						v:SetAttribute("LowerScale", v.Thickness / determineDimension("LowerScale"))
