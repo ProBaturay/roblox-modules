@@ -36,6 +36,33 @@ if RunService:IsRunning() then
 	return
 end
 
+local properties = {
+	[1] = "BackgroundColor3",
+	[2] = "Color",
+	[3] = "TextColor3"
+}
+
+local themeColors = {
+	["Dark"] = {
+		["Background"] = Color3.fromRGB(46, 46, 46),
+		["FrameBackground"] = Color3.fromRGB(53, 53, 53),
+		["Button"] = Color3.fromRGB(45, 45, 45),
+		["StaticText"] = Color3.fromRGB(188, 188, 188),
+		["VaryingText"] = Color3.fromRGB(255, 255, 255),
+		["ScrollBar"] = Color3.fromRGB(29, 29, 29),
+		["Stroke"] = Color3.fromRGB(10, 10, 10)
+	},
+	["Light"] = {
+		["Background"] = Color3.fromRGB(255, 255, 255),
+		["FrameBackground"] = Color3.fromRGB(242, 242, 242),
+		["Button"] = Color3.fromRGB(219, 219, 219),
+		["StaticText"] = Color3.fromRGB(0, 0, 0),
+		["VaryingText"] = Color3.fromRGB(25, 25, 25),
+		["ScrollBar"] = Color3.fromRGB(240, 240, 240),
+		["Stroke"] = Color3.fromRGB(200, 200, 200)
+	},
+}
+
 local plugin = plugin or getfenv().PluginManager():CreatePlugin()
 plugin.Name = "UIStrokeScalingPlugin"
 
@@ -64,6 +91,8 @@ widget.Title = "Scale UIStroke Thickness"
 button.Click:Connect(function()
 	widget.Enabled = not widget.Enabled
 end)
+
+local currentTheme = "Dark"
 
 local scr = ReplicatedFirst:FindFirstChild("UIStrokeThicknessScaling")
 
@@ -232,7 +261,7 @@ TextLabel.Size = UDim2.new(1, 0, 0, 15)
 TextLabel.BackgroundTransparency = 1
 TextLabel.Position = UDim2.new(0.5, 0, 0, 0)
 TextLabel.TextSize = 12
-TextLabel.TextColor3 = Color3.fromRGB(172, 172, 172)
+TextLabel.TextColor3 = Color3.fromRGB(188, 188, 188)
 TextLabel.Text = "Scale UIStroke Thickness"
 TextLabel.TextWrapped = true
 TextLabel.Font = Enum.Font.Gotham
@@ -243,9 +272,7 @@ Workplace.Name = "Workplace"
 Workplace.AnchorPoint = Vector2.new(0.5, 0)
 Workplace.Size = UDim2.new(0, 220, 0, 135)
 Workplace.ClipsDescendants = true
-Workplace.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Workplace.Position = UDim2.new(0.5, 0, 0.1, 0)
-Workplace.BorderSizePixel = 0
 Workplace.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
 Workplace.Parent = Main
 
@@ -255,11 +282,8 @@ UICorner.Parent = Workplace
 local TextLabel1 = Instance.new("TextLabel")
 TextLabel1.AnchorPoint = Vector2.new(0.5, 0)
 TextLabel1.Size = UDim2.new(0, 131, 0, 30)
-TextLabel1.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel1.BackgroundTransparency = 1
 TextLabel1.Position = UDim2.new(0.3340909, 0, 0, 0)
-TextLabel1.BorderSizePixel = 0
-TextLabel1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel1.TextSize = 14
 TextLabel1.TextColor3 = Color3.fromRGB(188, 188, 188)
 TextLabel1.Text = "Current viewport size:"
@@ -274,11 +298,8 @@ local ViewportSize = Instance.new("TextLabel")
 ViewportSize.Name = "ViewportSize"
 ViewportSize.AnchorPoint = Vector2.new(0.5, 0)
 ViewportSize.Size = UDim2.new(0, 58, 0, 30)
-ViewportSize.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ViewportSize.BackgroundTransparency = 1
 ViewportSize.Position = UDim2.new(0.8304384, 0, -0.001389, 0)
-ViewportSize.BorderSizePixel = 0
-ViewportSize.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 ViewportSize.TextSize = 14
 ViewportSize.TextColor3 = Color3.fromRGB(255, 255, 255)
 ViewportSize.Text = "1000x1000"
@@ -289,22 +310,16 @@ local OptionsMenu = Instance.new("Frame")
 OptionsMenu.Name = "OptionsMenu"
 OptionsMenu.AnchorPoint = Vector2.new(0.5, 1)
 OptionsMenu.Size = UDim2.new(1, -16, 0.8, -8)
-OptionsMenu.BorderColor3 = Color3.fromRGB(0, 0, 0)
 OptionsMenu.BackgroundTransparency = 1
 OptionsMenu.Position = UDim2.new(0.5, 0, 1, -8)
-OptionsMenu.BorderSizePixel = 0
-OptionsMenu.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 OptionsMenu.Parent = Workplace
 
 local IndividualFrame = Instance.new("Frame")
 IndividualFrame.Name = "IndividualFrame"
 IndividualFrame.AnchorPoint = Vector2.new(1, 1)
 IndividualFrame.Size = UDim2.new(0.4, 0, 0, 76)
-IndividualFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 IndividualFrame.BackgroundTransparency = 1
 IndividualFrame.Position = UDim2.new(1, -5, 1, 0)
-IndividualFrame.BorderSizePixel = 0
-IndividualFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 IndividualFrame.Parent = OptionsMenu
 
 local UIStroke1 = Instance.new("UIStroke")
@@ -318,9 +333,7 @@ local IndividualButton = Instance.new("TextButton")
 IndividualButton.Name = "IndividualButton"
 IndividualButton.AnchorPoint = Vector2.new(0.5, 0.5)
 IndividualButton.Size = UDim2.new(1.0000001, -10, 0.3289474, 26)
-IndividualButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
 IndividualButton.Position = UDim2.new(0.5, 0, 0.5, 0)
-IndividualButton.BorderSizePixel = 0
 IndividualButton.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 IndividualButton.TextSize = 14
 IndividualButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -341,11 +354,8 @@ local ForAllFrame = Instance.new("Frame")
 ForAllFrame.Name = "ForAllFrame"
 ForAllFrame.AnchorPoint = Vector2.new(0, 1)
 ForAllFrame.Size = UDim2.new(0.4, 0, 0, 76)
-ForAllFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ForAllFrame.BackgroundTransparency = 1
 ForAllFrame.Position = UDim2.new(0, 5, 1, 0)
-ForAllFrame.BorderSizePixel = 0
-ForAllFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 ForAllFrame.Parent = OptionsMenu
 
 local UIStroke3 = Instance.new("UIStroke")
@@ -359,9 +369,7 @@ local AdjustScaleForAll = Instance.new("TextButton")
 AdjustScaleForAll.Name = "AdjustScale"
 AdjustScaleForAll.AnchorPoint = Vector2.new(0.5, 0)
 AdjustScaleForAll.Size = UDim2.new(1, -10, 0, 26)
-AdjustScaleForAll.BorderColor3 = Color3.fromRGB(0, 0, 0)
 AdjustScaleForAll.Position = UDim2.new(0.5, 0, 0, 6)
-AdjustScaleForAll.BorderSizePixel = 0
 AdjustScaleForAll.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 AdjustScaleForAll.TextSize = 14
 AdjustScaleForAll.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -382,9 +390,7 @@ local AdjustMaxMinForAll = Instance.new("TextButton")
 AdjustMaxMinForAll.Name = "AdjustMaxMin"
 AdjustMaxMinForAll.AnchorPoint = Vector2.new(0.5, 1)
 AdjustMaxMinForAll.Size = UDim2.new(1, -10, 0, 26)
-AdjustMaxMinForAll.BorderColor3 = Color3.fromRGB(0, 0, 0)
 AdjustMaxMinForAll.Position = UDim2.new(0.5, 0, 1, -6)
-AdjustMaxMinForAll.BorderSizePixel = 0
 AdjustMaxMinForAll.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 AdjustMaxMinForAll.TextSize = 14
 AdjustMaxMinForAll.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -402,22 +408,18 @@ local UICorner5 = Instance.new("UICorner")
 UICorner5.Parent = AdjustMaxMinForAll
 
 local Frame1 = Instance.new("Frame")
+Frame1.BorderSizePixel = 0
 Frame1.AnchorPoint = Vector2.new(0.5, 1)
 Frame1.Size = UDim2.new(0, 2, 0.9, 0)
-Frame1.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame1.Position = UDim2.new(0.5, 0, 1, 0)
-Frame1.BorderSizePixel = 0
-Frame1.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Frame1.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 Frame1.Parent = OptionsMenu
 
 local TextLabel2 = Instance.new("TextLabel")
 TextLabel2.AnchorPoint = Vector2.new(1, 0)
 TextLabel2.Size = UDim2.new(0.4, 0, 0, 16)
-TextLabel2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel2.BackgroundTransparency = 1
 TextLabel2.Position = UDim2.new(1, -5, 0, 4)
-TextLabel2.BorderSizePixel = 0
-TextLabel2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel2.TextSize = 14
 TextLabel2.TextColor3 = Color3.fromRGB(188, 188, 188)
 TextLabel2.Text = "Individual"
@@ -426,11 +428,8 @@ TextLabel2.Parent = OptionsMenu
 
 local TextLabel3 = Instance.new("TextLabel")
 TextLabel3.Size = UDim2.new(0.4, 0, 0, 16)
-TextLabel3.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel3.BackgroundTransparency = 1
 TextLabel3.Position = UDim2.new(0, 5, 0, 4)
-TextLabel3.BorderSizePixel = 0
-TextLabel3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel3.TextSize = 14
 TextLabel3.TextColor3 = Color3.fromRGB(188, 188, 188)
 TextLabel3.Text = "For all"
@@ -442,11 +441,8 @@ Individual.Name = "Individual"
 Individual.AnchorPoint = Vector2.new(0.5, 1)
 Individual.Visible = false
 Individual.Size = UDim2.new(1, -16, 0.8, -8)
-Individual.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Individual.BackgroundTransparency = 1
 Individual.Position = UDim2.new(0.5, 0, 1, -8)
-Individual.BorderSizePixel = 0
-Individual.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Individual.Parent = Workplace
 
 local UIStrokeInfo = Instance.new("Frame")
@@ -454,11 +450,8 @@ UIStrokeInfo.Name = "UIStrokeInfo"
 UIStrokeInfo.AnchorPoint = Vector2.new(0.5, 1)
 UIStrokeInfo.Visible = false
 UIStrokeInfo.Size = UDim2.new(1, 0, 0, 76)
-UIStrokeInfo.BorderColor3 = Color3.fromRGB(0, 0, 0)
 UIStrokeInfo.BackgroundTransparency = 1
 UIStrokeInfo.Position = UDim2.new(0.5, 0, 1, 0)
-UIStrokeInfo.BorderSizePixel = 0
-UIStrokeInfo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 UIStrokeInfo.Parent = Individual
 
 local UIStroke6 = Instance.new("UIStroke")
@@ -472,11 +465,8 @@ local DeselectText = Instance.new("TextLabel")
 DeselectText.Name = "DeselectText"
 DeselectText.AnchorPoint = Vector2.new(0.5, 1)
 DeselectText.Size = UDim2.new(1, 0, -0.02, 16)
-DeselectText.BorderColor3 = Color3.fromRGB(0, 0, 0)
 DeselectText.BackgroundTransparency = 1
 DeselectText.Position = UDim2.new(0.5, 0, 0, -4)
-DeselectText.BorderSizePixel = 0
-DeselectText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 DeselectText.TextSize = 14
 DeselectText.RichText = true
 DeselectText.TextColor3 = Color3.fromRGB(188, 188, 188)
@@ -488,12 +478,9 @@ DeselectText.Parent = UIStrokeInfo
 local ScrollingFrame = Instance.new("ScrollingFrame")
 ScrollingFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 ScrollingFrame.Size = UDim2.new(1, 0, 1, 0)
-ScrollingFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ScrollingFrame.BackgroundTransparency = 1
 ScrollingFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
 ScrollingFrame.Active = true
-ScrollingFrame.BorderSizePixel = 0
-ScrollingFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 230)
 ScrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(29, 29, 29)
 ScrollingFrame.ScrollBarThickness = 6
@@ -503,11 +490,8 @@ ScrollingFrame.Parent = UIStrokeInfo
 local TextLabel4 = Instance.new("TextLabel")
 TextLabel4.AnchorPoint = Vector2.new(0.5, 0)
 TextLabel4.Size = UDim2.new(0.9, 0, 0, 16)
-TextLabel4.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel4.BackgroundTransparency = 1
 TextLabel4.Position = UDim2.new(0.5, 0, 0, 4)
-TextLabel4.BorderSizePixel = 0
-TextLabel4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel4.TextSize = 14
 TextLabel4.RichText = true
 TextLabel4.TextColor3 = Color3.fromRGB(188, 188, 188)
@@ -518,9 +502,7 @@ TextLabel4.Parent = ScrollingFrame
 
 local Frame2 = Instance.new("Frame")
 Frame2.Size = UDim2.new(0, 20, 0, 20)
-Frame2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame2.Position = UDim2.new(0, 16, 0, 30)
-Frame2.BorderSizePixel = 0
 Frame2.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 Frame2.Parent = ScrollingFrame
 
@@ -535,9 +517,7 @@ local IndividualLowerScale = Instance.new("TextButton")
 IndividualLowerScale.Name = "IndividualLowerScale"
 IndividualLowerScale.AnchorPoint = Vector2.new(0.5, 0.5)
 IndividualLowerScale.Size = UDim2.new(1, 0, 1, 0)
-IndividualLowerScale.BorderColor3 = Color3.fromRGB(0, 0, 0)
 IndividualLowerScale.Position = UDim2.new(0.5, 0, 0.5, 0)
-IndividualLowerScale.BorderSizePixel = 0
 IndividualLowerScale.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 IndividualLowerScale.AutoButtonColor = false
 IndividualLowerScale.TextSize = 14
@@ -556,11 +536,8 @@ UICorner8.Parent = IndividualLowerScale
 
 local TextLabel5 = Instance.new("TextLabel")
 TextLabel5.Size = UDim2.new(0, 50, 1, 0)
-TextLabel5.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel5.BackgroundTransparency = 1
 TextLabel5.Position = UDim2.new(1, 8, 0, 0)
-TextLabel5.BorderSizePixel = 0
-TextLabel5.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
 TextLabel5.TextSize = 14
 TextLabel5.TextColor3 = Color3.fromRGB(188, 188, 188)
 TextLabel5.Text = "Lower"
@@ -574,10 +551,8 @@ IndividualLowerIndicator.Name = "IndividualLowerIndicator"
 IndividualLowerIndicator.TextTruncate = Enum.TextTruncate.AtEnd
 IndividualLowerIndicator.AnchorPoint = Vector2.new(0, 0.5)
 IndividualLowerIndicator.Size = UDim2.new(0, 50, 1, 0)
-IndividualLowerIndicator.BorderColor3 = Color3.fromRGB(0, 0, 0)
 IndividualLowerIndicator.BackgroundTransparency = 1
 IndividualLowerIndicator.Position = UDim2.new(0, 120, 0.5, 0)
-IndividualLowerIndicator.BorderSizePixel = 0
 IndividualLowerIndicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 IndividualLowerIndicator.TextSize = 14
 IndividualLowerIndicator.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -595,9 +570,7 @@ UICorner9.Parent = IndividualLowerIndicator
 
 local Frame3 = Instance.new("Frame")
 Frame3.Size = UDim2.new(0, 20, 0, 20)
-Frame3.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame3.Position = UDim2.new(0, 16, 0, 55)
-Frame3.BorderSizePixel = 0
 Frame3.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 Frame3.Parent = ScrollingFrame
 
@@ -612,9 +585,7 @@ local IndividualUpperScale = Instance.new("TextButton")
 IndividualUpperScale.Name = "IndividualUpperScale"
 IndividualUpperScale.AnchorPoint = Vector2.new(0.5, 0.5)
 IndividualUpperScale.Size = UDim2.new(1, 0, 1, 0)
-IndividualUpperScale.BorderColor3 = Color3.fromRGB(0, 0, 0)
 IndividualUpperScale.Position = UDim2.new(0.5, 0, 0.5, 0)
-IndividualUpperScale.BorderSizePixel = 0
 IndividualUpperScale.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 IndividualUpperScale.AutoButtonColor = false
 IndividualUpperScale.TextSize = 14
@@ -633,10 +604,8 @@ UICorner11.Parent = IndividualUpperScale
 
 local TextLabel6 = Instance.new("TextLabel")
 TextLabel6.Size = UDim2.new(0, 50, 1, 0)
-TextLabel6.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel6.BackgroundTransparency = 1
 TextLabel6.Position = UDim2.new(1, 8, 0, 0)
-TextLabel6.BorderSizePixel = 0
 TextLabel6.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
 TextLabel6.TextSize = 14
 TextLabel6.TextColor3 = Color3.fromRGB(188, 188, 188)
@@ -651,10 +620,8 @@ IndividualUpperIndicator.Name = "IndividualUpperIndicator"
 IndividualUpperIndicator.TextTruncate = Enum.TextTruncate.AtEnd
 IndividualUpperIndicator.AnchorPoint = Vector2.new(0, 0.5)
 IndividualUpperIndicator.Size = UDim2.new(0, 50, 1, 0)
-IndividualUpperIndicator.BorderColor3 = Color3.fromRGB(0, 0, 0)
 IndividualUpperIndicator.BackgroundTransparency = 1
 IndividualUpperIndicator.Position = UDim2.new(0, 120, 0.5, 0)
-IndividualUpperIndicator.BorderSizePixel = 0
 IndividualUpperIndicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 IndividualUpperIndicator.TextSize = 14
 IndividualUpperIndicator.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -673,9 +640,7 @@ UICorner12.Parent = IndividualUpperIndicator
 local IndividualInsert = Instance.new("TextButton")
 IndividualInsert.Name = "IndividualInsert"
 IndividualInsert.Size = UDim2.new(0, 80, 0, 26)
-IndividualInsert.BorderColor3 = Color3.fromRGB(0, 0, 0)
 IndividualInsert.Position = UDim2.new(0, 16, 0, 110)
-IndividualInsert.BorderSizePixel = 0
 IndividualInsert.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 IndividualInsert.TextSize = 14
 IndividualInsert.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -696,9 +661,7 @@ local IndividualDelete = Instance.new("TextButton")
 IndividualDelete.Name = "IndividualDelete"
 IndividualDelete.AnchorPoint = Vector2.new(1, 0)
 IndividualDelete.Size = UDim2.new(0, 80, 0, 26)
-IndividualDelete.BorderColor3 = Color3.fromRGB(0, 0, 0)
 IndividualDelete.Position = UDim2.new(1, -16, 0, 110)
-IndividualDelete.BorderSizePixel = 0
 IndividualDelete.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 IndividualDelete.TextSize = 14
 IndividualDelete.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -718,19 +681,15 @@ UICorner14.Parent = IndividualDelete
 local Frame4 = Instance.new("Frame")
 Frame4.AnchorPoint = Vector2.new(0.5, 0)
 Frame4.Size = UDim2.new(0, 175, 0, 1)
-Frame4.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame4.Position = UDim2.new(0.5, 0, 0, 150)
-Frame4.BorderSizePixel = 0
-Frame4.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Frame4.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 Frame4.Parent = ScrollingFrame
 
 local TextLabel7 = Instance.new("TextLabel")
 TextLabel7.AnchorPoint = Vector2.new(0.5, 0)
 TextLabel7.Size = UDim2.new(0.9, 0, 0, 16)
-TextLabel7.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel7.BackgroundTransparency = 1
 TextLabel7.Position = UDim2.new(0.5, 0, 0, 155)
-TextLabel7.BorderSizePixel = 0
 TextLabel7.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel7.TextSize = 14
 TextLabel7.RichText = true
@@ -744,10 +703,8 @@ local IndividualCurrentScale = Instance.new("TextLabel")
 IndividualCurrentScale.Name = "IndividualCurrentScale"
 IndividualCurrentScale.AnchorPoint = Vector2.new(0.5, 0)
 IndividualCurrentScale.Size = UDim2.new(1, -32, 0, 16)
-IndividualCurrentScale.BorderColor3 = Color3.fromRGB(0, 0, 0)
 IndividualCurrentScale.BackgroundTransparency = 1
 IndividualCurrentScale.Position = UDim2.new(0.5, 0, 0, 85)
-IndividualCurrentScale.BorderSizePixel = 0
 IndividualCurrentScale.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 IndividualCurrentScale.TextSize = 14
 IndividualCurrentScale.RichText = true
@@ -761,18 +718,14 @@ IndividualCurrentScale.Parent = ScrollingFrame
 local Frame5 = Instance.new("Frame")
 Frame5.AnchorPoint = Vector2.new(0.5, 0)
 Frame5.Size = UDim2.new(1, -32, 0, 20)
-Frame5.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame5.BackgroundTransparency = 1
 Frame5.Position = UDim2.new(0.5, 0, 0, 205)
-Frame5.BorderSizePixel = 0
 Frame5.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 Frame5.Parent = ScrollingFrame
 
 local TextLabel8 = Instance.new("TextLabel")
 TextLabel8.Size = UDim2.new(0, 115, 1, 0)
-TextLabel8.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel8.BackgroundTransparency = 1
-TextLabel8.BorderSizePixel = 0
 TextLabel8.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
 TextLabel8.TextSize = 14
 TextLabel8.TextColor3 = Color3.fromRGB(188, 188, 188)
@@ -787,10 +740,8 @@ IndividualMaxPixelsBox.Name = "IndividualMaxPixelsBox"
 IndividualMaxPixelsBox.TextTruncate = Enum.TextTruncate.AtEnd
 IndividualMaxPixelsBox.AnchorPoint = Vector2.new(0, 0.5)
 IndividualMaxPixelsBox.Size = UDim2.new(0, 50, 1, 0)
-IndividualMaxPixelsBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
 IndividualMaxPixelsBox.BackgroundTransparency = 1
 IndividualMaxPixelsBox.Position = UDim2.new(0, 120, 0.5, 0)
-IndividualMaxPixelsBox.BorderSizePixel = 0
 IndividualMaxPixelsBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 IndividualMaxPixelsBox.PlaceholderColor3 = Color3.fromRGB(178, 178, 178)
 IndividualMaxPixelsBox.TextSize = 14
@@ -810,18 +761,14 @@ UICorner15.Parent = IndividualMaxPixelsBox
 local Frame6 = Instance.new("Frame")
 Frame6.AnchorPoint = Vector2.new(0.5, 0)
 Frame6.Size = UDim2.new(1, -32, 0, 20)
-Frame6.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame6.BackgroundTransparency = 1
 Frame6.Position = UDim2.new(0.5, 0, 0, 180)
-Frame6.BorderSizePixel = 0
 Frame6.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 Frame6.Parent = ScrollingFrame
 
 local TextLabel9 = Instance.new("TextLabel")
 TextLabel9.Size = UDim2.new(0, 115, 1, 0)
-TextLabel9.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel9.BackgroundTransparency = 1
-TextLabel9.BorderSizePixel = 0
 TextLabel9.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
 TextLabel9.TextSize = 14
 TextLabel9.TextColor3 = Color3.fromRGB(188, 188, 188)
@@ -836,10 +783,8 @@ IndividualMinPixelsBox.Name = "IndividualMinPixelsBox"
 IndividualMinPixelsBox.TextTruncate = Enum.TextTruncate.AtEnd
 IndividualMinPixelsBox.AnchorPoint = Vector2.new(0, 0.5)
 IndividualMinPixelsBox.Size = UDim2.new(0, 50, 1, 0)
-IndividualMinPixelsBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
 IndividualMinPixelsBox.BackgroundTransparency = 1
 IndividualMinPixelsBox.Position = UDim2.new(0, 120, 0.5, 0)
-IndividualMinPixelsBox.BorderSizePixel = 0
 IndividualMinPixelsBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 IndividualMinPixelsBox.PlaceholderColor3 = Color3.fromRGB(178, 178, 178)
 IndividualMinPixelsBox.TextSize = 14
@@ -860,10 +805,8 @@ local SelectText = Instance.new("TextLabel")
 SelectText.Name = "SelectText"
 SelectText.AnchorPoint = Vector2.new(0.5, 0)
 SelectText.Size = UDim2.new(0.8921568, 0, 0.145, 16)
-SelectText.BorderColor3 = Color3.fromRGB(0, 0, 0)
 SelectText.BackgroundTransparency = 1
 SelectText.Position = UDim2.new(0.5, 0, 0.2, 0)
-SelectText.BorderSizePixel = 0
 SelectText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 SelectText.TextSize = 14
 SelectText.RichText = true
@@ -877,9 +820,7 @@ local ReturnFromIndividual = Instance.new("TextButton")
 ReturnFromIndividual.Name = "ReturnFromIndividual"
 ReturnFromIndividual.AnchorPoint = Vector2.new(0.5, 1)
 ReturnFromIndividual.Size = UDim2.new(0.7, 0, -0.09, 30)
-ReturnFromIndividual.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ReturnFromIndividual.Position = UDim2.new(0.5, 0, 1, 0)
-ReturnFromIndividual.BorderSizePixel = 0
 ReturnFromIndividual.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 ReturnFromIndividual.AutoButtonColor = true
 ReturnFromIndividual.TextSize = 14
@@ -901,10 +842,8 @@ ForAllScale.Name = "ForAllScale"
 ForAllScale.AnchorPoint = Vector2.new(0.5, 1)
 ForAllScale.Visible = false
 ForAllScale.Size = UDim2.new(1, -16, 0.8, -8)
-ForAllScale.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ForAllScale.BackgroundTransparency = 1
 ForAllScale.Position = UDim2.new(0.5, 0, 1, -8)
-ForAllScale.BorderSizePixel = 0
 ForAllScale.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 ForAllScale.Parent = Workplace
 
@@ -912,9 +851,7 @@ local ReturnFromForAllScale = Instance.new("TextButton")
 ReturnFromForAllScale.Name = "ReturnFromForAllScale"
 ReturnFromForAllScale.AnchorPoint = Vector2.new(0.5, 1)
 ReturnFromForAllScale.Size = UDim2.new(0.7, 0, -0.09, 30)
-ReturnFromForAllScale.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ReturnFromForAllScale.Position = UDim2.new(0.5, 0, 1, 0)
-ReturnFromForAllScale.BorderSizePixel = 0
 ReturnFromForAllScale.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 ReturnFromForAllScale.TextSize = 14
 ReturnFromForAllScale.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -932,9 +869,7 @@ UICorner18.Parent = ReturnFromForAllScale
 
 local Frame7 = Instance.new("Frame")
 Frame7.Size = UDim2.new(0, 20, 0, 20)
-Frame7.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame7.Position = UDim2.new(0, 16, 0, 16)
-Frame7.BorderSizePixel = 0
 Frame7.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 Frame7.Parent = ForAllScale
 
@@ -949,9 +884,7 @@ local ForAllLowerScale = Instance.new("TextButton")
 ForAllLowerScale.Name = "ForAllLowerScale"
 ForAllLowerScale.AnchorPoint = Vector2.new(0.5, 0.5)
 ForAllLowerScale.Size = UDim2.new(1, 0, 1, 0)
-ForAllLowerScale.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ForAllLowerScale.Position = UDim2.new(0.5, 0, 0.5, 0)
-ForAllLowerScale.BorderSizePixel = 0
 ForAllLowerScale.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 ForAllLowerScale.AutoButtonColor = false
 ForAllLowerScale.TextSize = 14
@@ -970,11 +903,8 @@ UICorner20.Parent = ForAllLowerScale
 
 local TextLabel10 = Instance.new("TextLabel")
 TextLabel10.Size = UDim2.new(0, 50, 1, 0)
-TextLabel10.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel10.BackgroundTransparency = 1
 TextLabel10.Position = UDim2.new(1, 8, 0, 0)
-TextLabel10.BorderSizePixel = 0
-TextLabel10.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
 TextLabel10.TextSize = 14
 TextLabel10.TextColor3 = Color3.fromRGB(188, 188, 188)
 TextLabel10.Text = "Lower"
@@ -985,9 +915,7 @@ TextLabel10.Parent = Frame7
 
 local Frame8 = Instance.new("Frame")
 Frame8.Size = UDim2.new(0, 20, 0, 20)
-Frame8.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame8.Position = UDim2.new(0, 110, 0, 16)
-Frame8.BorderSizePixel = 0
 Frame8.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 Frame8.Parent = ForAllScale
 
@@ -1002,9 +930,7 @@ local ForAllUpperScale = Instance.new("TextButton")
 ForAllUpperScale.Name = "ForAllUpperScale"
 ForAllUpperScale.AnchorPoint = Vector2.new(0.5, 0.5)
 ForAllUpperScale.Size = UDim2.new(1, 0, 1, 0)
-ForAllUpperScale.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ForAllUpperScale.Position = UDim2.new(0.5, 0, 0.5, 0)
-ForAllUpperScale.BorderSizePixel = 0
 ForAllUpperScale.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 ForAllUpperScale.AutoButtonColor = false
 ForAllUpperScale.TextSize = 14
@@ -1023,10 +949,8 @@ UICorner23.Parent = ForAllUpperScale
 
 local TextLabel11 = Instance.new("TextLabel")
 TextLabel11.Size = UDim2.new(0, 50, 1, 0)
-TextLabel11.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel11.BackgroundTransparency = 1
 TextLabel11.Position = UDim2.new(1, 8, 0, 0)
-TextLabel11.BorderSizePixel = 0
 TextLabel11.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
 TextLabel11.TextSize = 14
 TextLabel11.TextColor3 = Color3.fromRGB(188, 188, 188)
@@ -1040,9 +964,7 @@ local ForAllDelete = Instance.new("TextButton")
 ForAllDelete.Name = "ForAllDelete"
 ForAllDelete.AnchorPoint = Vector2.new(1, 0)
 ForAllDelete.Size = UDim2.new(0, 80, 0, 20)
-ForAllDelete.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ForAllDelete.Position = UDim2.new(1, -16, 0, 45)
-ForAllDelete.BorderSizePixel = 0
 ForAllDelete.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 ForAllDelete.TextSize = 14
 ForAllDelete.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -1062,9 +984,7 @@ UICorner25.Parent = ForAllDelete
 local ForAllInsert = Instance.new("TextButton")
 ForAllInsert.Name = "ForAllInsert"
 ForAllInsert.Size = UDim2.new(0, 80, 0, 20)
-ForAllInsert.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ForAllInsert.Position = UDim2.new(0, 16, 0, 45)
-ForAllInsert.BorderSizePixel = 0
 ForAllInsert.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 ForAllInsert.TextSize = 14
 ForAllInsert.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -1086,10 +1006,8 @@ ForAllMaxMin.Name = "ForAllMaxMin"
 ForAllMaxMin.AnchorPoint = Vector2.new(0.5, 1)
 ForAllMaxMin.Visible = false
 ForAllMaxMin.Size = UDim2.new(1, -16, 0.8, -8)
-ForAllMaxMin.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ForAllMaxMin.BackgroundTransparency = 1
 ForAllMaxMin.Position = UDim2.new(0.5, 0, 1, -8)
-ForAllMaxMin.BorderSizePixel = 0
 ForAllMaxMin.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 ForAllMaxMin.Parent = Workplace
 
@@ -1097,9 +1015,7 @@ local ReturnFromForAllMaxMin = Instance.new("TextButton")
 ReturnFromForAllMaxMin.Name = "ReturnFromForAllScale"
 ReturnFromForAllMaxMin.AnchorPoint = Vector2.new(0.5, 1)
 ReturnFromForAllMaxMin.Size = UDim2.new(0.7, 0, -0.09, 30)
-ReturnFromForAllMaxMin.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ReturnFromForAllMaxMin.Position = UDim2.new(0.5, 0, 1, 0)
-ReturnFromForAllMaxMin.BorderSizePixel = 0
 ReturnFromForAllMaxMin.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 ReturnFromForAllMaxMin.TextSize = 14
 ReturnFromForAllMaxMin.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -1118,19 +1034,14 @@ UICorner27.Parent = ReturnFromForAllMaxMin
 local Frame9 = Instance.new("Frame")
 Frame9.AnchorPoint = Vector2.new(0.5, 0)
 Frame9.Size = UDim2.new(1, -32, 0, 20)
-Frame9.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame9.BackgroundTransparency = 1
 Frame9.Position = UDim2.new(0.5, 0, 0, 40)
-Frame9.BorderSizePixel = 0
 Frame9.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 Frame9.Parent = ForAllMaxMin
 
 local TextLabel12 = Instance.new("TextLabel")
 TextLabel12.Size = UDim2.new(0, 115, 1, 0)
-TextLabel12.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel12.BackgroundTransparency = 1
-TextLabel12.BorderSizePixel = 0
-TextLabel12.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
 TextLabel12.TextSize = 14
 TextLabel12.TextColor3 = Color3.fromRGB(188, 188, 188)
 TextLabel12.Text = "Maximum pixels"
@@ -1144,10 +1055,8 @@ ForAllMaxPixelsBox.Name = "ForAllMinPixelsBox"
 ForAllMaxPixelsBox.ClearTextOnFocus = true
 ForAllMaxPixelsBox.AnchorPoint = Vector2.new(0, 0.5)
 ForAllMaxPixelsBox.Size = UDim2.new(0, 50, 1, 0)
-ForAllMaxPixelsBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ForAllMaxPixelsBox.BackgroundTransparency = 1
 ForAllMaxPixelsBox.Position = UDim2.new(0, 120, 0.5, 0)
-ForAllMaxPixelsBox.BorderSizePixel = 0
 ForAllMaxPixelsBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 ForAllMaxPixelsBox.PlaceholderColor3 = Color3.fromRGB(178, 178, 178)
 ForAllMaxPixelsBox.TextSize = 14
@@ -1167,18 +1076,14 @@ UICorner28.Parent = ForAllMaxPixelsBox
 local Frame10 = Instance.new("Frame")
 Frame10.AnchorPoint = Vector2.new(0.5, 0)
 Frame10.Size = UDim2.new(1, -32, 0, 20)
-Frame10.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame10.BackgroundTransparency = 1
 Frame10.Position = UDim2.new(0.5, 0, 0, 15)
-Frame10.BorderSizePixel = 0
 Frame10.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 Frame10.Parent = ForAllMaxMin
 
 local TextLabel13 = Instance.new("TextLabel")
 TextLabel13.Size = UDim2.new(0, 115, 1, 0)
-TextLabel13.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel13.BackgroundTransparency = 1
-TextLabel13.BorderSizePixel = 0
 TextLabel13.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
 TextLabel13.TextSize = 14
 TextLabel13.TextColor3 = Color3.fromRGB(188, 188, 188)
@@ -1193,10 +1098,8 @@ ForAllMinPixelsBox.Name = "ForAllMinPixelsBox"
 ForAllMinPixelsBox.ClearTextOnFocus = true
 ForAllMinPixelsBox.AnchorPoint = Vector2.new(0, 0.5)
 ForAllMinPixelsBox.Size = UDim2.new(0, 50, 1, 0)
-ForAllMinPixelsBox.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ForAllMinPixelsBox.BackgroundTransparency = 1
 ForAllMinPixelsBox.Position = UDim2.new(0, 120, 0.5, 0)
-ForAllMinPixelsBox.BorderSizePixel = 0
 ForAllMinPixelsBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 ForAllMinPixelsBox.PlaceholderColor3 = Color3.fromRGB(178, 178, 178)
 ForAllMinPixelsBox.TextSize = 14
@@ -1218,10 +1121,8 @@ IndividualWarning.Name = "IndividualWarning"
 IndividualWarning.AnchorPoint = Vector2.new(0.5, 1)
 IndividualWarning.Visible = false
 IndividualWarning.Size = UDim2.new(1, -16, 0.8, -8)
-IndividualWarning.BorderColor3 = Color3.fromRGB(0, 0, 0)
 IndividualWarning.BackgroundTransparency = 1
 IndividualWarning.Position = UDim2.new(0.5, 0, 1, -8)
-IndividualWarning.BorderSizePixel = 0
 IndividualWarning.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 IndividualWarning.Parent = Workplace
 
@@ -1229,10 +1130,8 @@ local SelectText1 = Instance.new("TextLabel")
 SelectText1.Name = "SelectText"
 SelectText1.AnchorPoint = Vector2.new(0.5, 0.5)
 SelectText1.Size = UDim2.new(1, 0, 0, 50)
-SelectText1.BorderColor3 = Color3.fromRGB(0, 0, 0)
 SelectText1.BackgroundTransparency = 1
 SelectText1.Position = UDim2.new(0.5, 0, 0.5, 0)
-SelectText1.BorderSizePixel = 0
 SelectText1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 SelectText1.TextSize = 14
 SelectText1.RichText = true
@@ -1245,19 +1144,15 @@ SelectText1.Parent = IndividualWarning
 local Frame11 = Instance.new("Frame")
 Frame11.AnchorPoint = Vector2.new(0.5, 1)
 Frame11.Size = UDim2.new(0, 220, 0, 50)
-Frame11.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame11.BackgroundTransparency = 1
 Frame11.Position = UDim2.new(0.5, 0, 0.88, 0)
-Frame11.BorderSizePixel = 0
 Frame11.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Frame11.Parent = Main
 
 local Frame12 = Instance.new("Frame")
 Frame12.AnchorPoint = Vector2.new(0, 1)
 Frame12.Size = UDim2.new(0, 48, 0, 48)
-Frame12.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame12.Position = UDim2.new(0, 0, 1, 0)
-Frame12.BorderSizePixel = 0
 Frame12.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 Frame12.Parent = Frame11
 
@@ -1272,9 +1167,7 @@ local InfoButton = Instance.new("TextButton")
 InfoButton.Name = "InfoButton"
 InfoButton.AnchorPoint = Vector2.new(0.5, 0.5)
 InfoButton.Size = UDim2.new(1, 0, 1, 0)
-InfoButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
 InfoButton.Position = UDim2.new(0.5, 0, 0.5, 0)
-InfoButton.BorderSizePixel = 0
 InfoButton.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 InfoButton.TextSize = 14
 InfoButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -1292,9 +1185,7 @@ UICorner31.Parent = InfoButton
 
 local TextLabel14 = Instance.new("TextLabel")
 TextLabel14.Size = UDim2.new(0, 158, 0, 50)
-TextLabel14.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel14.Position = UDim2.new(1.2920001, 0, 0, 0)
-TextLabel14.BorderSizePixel = 0
 TextLabel14.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
 TextLabel14.TextSize = 14
 TextLabel14.TextColor3 = Color3.fromRGB(188, 188, 188)
@@ -1318,7 +1209,7 @@ TextLabel15.BackgroundTransparency = 1
 TextLabel15.Position = UDim2.new(0.5, 0, 1, 0)
 TextLabel15.TextSize = 12
 TextLabel15.RichText = true
-TextLabel15.TextColor3 = Color3.fromRGB(172, 172, 172)
+TextLabel15.TextColor3 = Color3.fromRGB(188, 188, 188)
 TextLabel15.Text = "Made by <b>@ProBaturay</b> with passion!"
 TextLabel15.TextWrapped = true
 TextLabel15.Font = Enum.Font.Gotham
@@ -1338,7 +1229,7 @@ TextLabel16.Size = UDim2.new(1, 0, 0, 15)
 TextLabel16.BackgroundTransparency = 1
 TextLabel16.Position = UDim2.new(0.5, 0, 0, 0)
 TextLabel16.TextSize = 12
-TextLabel16.TextColor3 = Color3.fromRGB(172, 172, 172)
+TextLabel16.TextColor3 = Color3.fromRGB(188, 188, 188)
 TextLabel16.Text = "Scale UIStroke Thickness"
 TextLabel16.TextWrapped = true
 TextLabel16.Font = Enum.Font.Gotham
@@ -1347,9 +1238,7 @@ TextLabel16.Parent = Info
 local Frame13 = Instance.new("Frame")
 Frame13.AnchorPoint = Vector2.new(0.5, 1)
 Frame13.Size = UDim2.new(0, 220, 0, 207)
-Frame13.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame13.Position = UDim2.new(0.5, 0, 0.828, 0)
-Frame13.BorderSizePixel = 0
 Frame13.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
 Frame13.Parent = Info
 
@@ -1359,11 +1248,8 @@ UICorner33.Parent = Frame13
 local TextLabel17 = Instance.new("TextLabel")
 TextLabel17.AnchorPoint = Vector2.new(0.5, 0.5)
 TextLabel17.Size = UDim2.new(0, 210, 0, 200)
-TextLabel17.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel17.BackgroundTransparency = 1
 TextLabel17.Position = UDim2.new(0.5, 0, 0.5028177, 0)
-TextLabel17.BorderSizePixel = 0
-TextLabel17.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel17.TextSize = 14
 TextLabel17.RichText = true
 TextLabel17.TextColor3 = Color3.fromRGB(188, 188, 188)
@@ -1379,9 +1265,7 @@ UIStroke33.Parent = Frame13
 local Frame14 = Instance.new("Frame")
 Frame14.AnchorPoint = Vector2.new(0.5, 1)
 Frame14.Size = UDim2.new(0, 150, 0, 30)
-Frame14.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame14.Position = UDim2.new(0.5, 0, 1, 0)
-Frame14.BorderSizePixel = 0
 Frame14.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 Frame14.Parent = Info
 
@@ -1389,9 +1273,7 @@ local ReturnFromInfo = Instance.new("TextButton")
 ReturnFromInfo.Name = "ReturnFromInfo"
 ReturnFromInfo.AnchorPoint = Vector2.new(0.5, 0.5)
 ReturnFromInfo.Size = UDim2.new(1, 0, 1, 0)
-ReturnFromInfo.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ReturnFromInfo.Position = UDim2.new(0.5, 0, 0.5, 0)
-ReturnFromInfo.BorderSizePixel = 0
 ReturnFromInfo.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
 ReturnFromInfo.TextSize = 14
 ReturnFromInfo.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -1407,6 +1289,15 @@ UIStroke34.Parent = ReturnFromInfo
 local UICorner34 = Instance.new("UICorner")
 UICorner34.Parent = ReturnFromInfo
 
+for i, object in widget:GetDescendants() do
+	if object:IsA("UIStroke") then
+		object.Color = Color3.fromRGB(10, 10, 10)
+	end
+	
+	if object:IsA("GuiObject") then
+		object.BorderSizePixel = 0
+	end
+end
 
 local TInfo_Slide = TweenInfo.new(
 	0.5,
@@ -1417,28 +1308,29 @@ local TInfo_Slide = TweenInfo.new(
 	0
 )
 
-local function getViewportSize()
+local function adjustViewportSize()
 	local camera = workspace:FindFirstChild("Camera")
 
 	if camera then
-		return camera.ViewportSize
+		ViewportSize.Text = math.floor(camera.ViewportSize.X) .. "x" .. math.floor(camera.ViewportSize.Y)
+		return
 	end
 	
-	local temporaryScreenGui = Instance.new("ScreenGui")
-	temporaryScreenGui.Parent = StarterGui
+	--local temporaryScreenGui = Instance.new("ScreenGui")
+	--temporaryScreenGui.Parent = StarterGui
 
-	local temporaryFrame = Instance.new("Frame")
-	temporaryFrame.Active = false
-	temporaryFrame.BackgroundTransparency = 1
-	temporaryFrame.Size = UDim2.new(1, 0, 1, 0)
-	temporaryFrame.Position = UDim2.new(10, 0, 10, 0)
-	temporaryFrame.Parent = temporaryScreenGui
+	--local temporaryFrame = Instance.new("Frame")
+	--temporaryFrame.Active = false
+	--temporaryFrame.BackgroundTransparency = 1
+	--temporaryFrame.Size = UDim2.new(1, 0, 1, 0)
+	--temporaryFrame.Position = UDim2.new(10, 0, 10, 0)
+	--temporaryFrame.Parent = temporaryScreenGui
 	
-	task.defer(function()
-		temporaryScreenGui:Destroy()
-	end)
+	--task.defer(function()
+	--	temporaryScreenGui:Destroy()
+	--end)
 	
-	return temporaryFrame.AbsoluteSize
+	--return temporaryFrame.AbsoluteSize
 end
 
 local function isTextObject(object: TextObject)
@@ -1635,12 +1527,12 @@ end)
 IndividualUpperScale.Activated:Connect(function()
 	individual_ScaleType = "UpperScale"
 	IndividualUpperScale.BackgroundColor3 = SCALE_OPTION_BACKGROUND
-	IndividualLowerScale.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
+	IndividualLowerScale.BackgroundColor3 = themeColors[currentTheme]["Button"]
 end)
 
 IndividualLowerScale.Activated:Connect(function()
 	individual_ScaleType = "LowerScale"
-	IndividualUpperScale.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
+	IndividualUpperScale.BackgroundColor3 = themeColors[currentTheme]["Button"]
 	IndividualLowerScale.BackgroundColor3 = SCALE_OPTION_BACKGROUND
 end)
 
@@ -1712,12 +1604,12 @@ end)
 ForAllUpperScale.Activated:Connect(function()
 	forAll_ScaleType = "UpperScale"
 	ForAllUpperScale.BackgroundColor3 = SCALE_OPTION_BACKGROUND
-	ForAllLowerScale.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
+	ForAllLowerScale.BackgroundColor3 = themeColors[currentTheme]["Button"]
 end)
 
 ForAllLowerScale.Activated:Connect(function()
 	forAll_ScaleType = "LowerScale"
-	ForAllUpperScale.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
+	ForAllUpperScale.BackgroundColor3 = themeColors[currentTheme]["Button"]
 	ForAllLowerScale.BackgroundColor3 = SCALE_OPTION_BACKGROUND
 end)
 
@@ -1736,37 +1628,39 @@ Selection.SelectionChanged:Connect(function()
 	elseif #objects == 0 then
 		setState(true)
 	else
-		ReturnFromIndividual.Visible = false
-		SelectText.Visible = false
-		IndividualWarning.Visible = false
-		
 		local stroke = objects[1]
 		
-		if stroke:IsA("UIStroke") then
-			if stroke:GetAttribute("UseScale") == false then
-				IndividualMaxPixelsBox.TextEditable = false
-				IndividualMinPixelsBox.TextEditable = false
+		pcall(function()
+			if stroke:IsA("UIStroke") then
+				ReturnFromIndividual.Visible = false
+				SelectText.Visible = false
+				IndividualWarning.Visible = false
+
+				if stroke:GetAttribute("UseScale") == false then
+					IndividualMaxPixelsBox.TextEditable = false
+					IndividualMinPixelsBox.TextEditable = false
+				else
+					IndividualMaxPixelsBox.TextEditable = true
+					IndividualMinPixelsBox.TextEditable = true
+				end
+
+				individual_min = tostring(if stroke:GetAttribute("MinThickness") then stroke:GetAttribute("MinThickness") else 0)
+				individual_max = tostring(if stroke:GetAttribute("MaxThickness") then stroke:GetAttribute("MaxThickness") else math.huge)
+				individual_lower = stroke:GetAttribute("LowerScale")
+				individual_upper = stroke:GetAttribute("UpperScale")
+
+				IndividualUpperIndicator.Text = if stroke:GetAttribute("UpperScale") then stroke:GetAttribute("UpperScale") else "No info"
+				IndividualLowerIndicator.Text = if stroke:GetAttribute("LowerScale") then stroke:GetAttribute("LowerScale") else "No info"
+				IndividualMaxPixelsBox.Text = if stroke:GetAttribute("MaxThickness") then stroke:GetAttribute("MaxThickness") else "No info"
+				IndividualMinPixelsBox.Text = if stroke:GetAttribute("MinThickness") then stroke:GetAttribute("MinThickness") else "No info"
+
+				IndividualCurrentScale.Text = "Current scale type: " .. if stroke:GetAttribute("ScaleType") then stroke:GetAttribute("ScaleType") else "No info"
+
+				UIStrokeInfo.Visible = true
 			else
-				IndividualMaxPixelsBox.TextEditable = true
-				IndividualMinPixelsBox.TextEditable = true
+				setState(true)
 			end
-			
-			individual_min = tostring(if stroke:GetAttribute("MinThickness") then stroke:GetAttribute("MinThickness") else 0)
-			individual_max = tostring(if stroke:GetAttribute("MaxThickness") then stroke:GetAttribute("MaxThickness") else math.huge)
-			individual_lower = stroke:GetAttribute("LowerScale")
-			individual_upper = stroke:GetAttribute("UpperScale")
-			
-			IndividualUpperIndicator.Text = if stroke:GetAttribute("UpperScale") then stroke:GetAttribute("UpperScale") else "No info"
-			IndividualLowerIndicator.Text = if stroke:GetAttribute("LowerScale") then stroke:GetAttribute("LowerScale") else "No info"
-			IndividualMaxPixelsBox.Text = if stroke:GetAttribute("MaxThickness") then stroke:GetAttribute("MaxThickness") else "No info"
-			IndividualMinPixelsBox.Text = if stroke:GetAttribute("MinThickness") then stroke:GetAttribute("MinThickness") else "No info"
-			
-			IndividualCurrentScale.Text = "Current scale type: " .. if stroke:GetAttribute("ScaleType") then stroke:GetAttribute("ScaleType") else "No info"
-			
-			UIStrokeInfo.Visible = true
-		else
-			setState(true)
-		end
+		end)
 	end
 end)
 
@@ -1889,9 +1783,48 @@ if TESTING_PROCESS then
 	plugin.Parent = workspace
 end
 
--- Loop
-while true do
-	task.wait(1)
-	local size = getViewportSize()
-	ViewportSize.Text = math.floor(size.X) .. "x" .. math.floor(size.Y)
+local function checkColorEquality(color1: Color3, color2: Color3)
+	return if color1.R == color2.R and color1.G == color2.G and color1.B == color2.B then true else false
 end
+
+local function findCorrespondingColor(property)
+	local function other()
+		return if currentTheme == "Dark" then "Light" else "Dark"
+	end
+	
+	for name, color in themeColors[other()] do
+		if checkColorEquality(themeColors[currentTheme][name], property) then
+			return color
+		end
+	end
+	
+	return
+end
+
+local function changeColors()
+	if settings().Studio.Theme.Name :: any ~= currentTheme then
+		for i, v in widget:GetDescendants() do
+			for i, property in properties do
+				pcall(function()
+					if typeof(v[property]) == "Color3" then
+						v[property] = findCorrespondingColor(v[property])
+					end
+				end)
+			end
+		end
+	end
+	
+	currentTheme = settings().Studio.Theme.Name :: any
+end
+
+workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(function()
+	adjustViewportSize()
+end)
+
+adjustViewportSize()
+
+settings().Studio.ThemeChanged:Connect(function()
+	changeColors()
+end)
+
+changeColors()
