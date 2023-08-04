@@ -987,15 +987,16 @@ local function insert(scr: Script)
 				Lines.Text = tostring(#tableOfLines)
 				Characters.Text = tostring(#source)
 			else
+				local lines_without_whitespace = 0
 				for i, line in tableOfLines do
-					if line == "" or string.match(line, "^%s+$") then
-						table.remove(tableOfLines, i)
+					if not (line == "" or string.match(line, "^%s+$")) then
+						lines_without_whitespace += 1
 					end
 				end
 				
 				local without_whitespace = string.gsub(source, "%s+", "")
 				
-				Lines.Text = tostring(#tableOfLines)
+				Lines.Text = tostring(lines_without_whitespace)
 				Characters.Text = tostring(#without_whitespace)
 			end
 			
