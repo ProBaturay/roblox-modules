@@ -1,6 +1,8 @@
 --15:51 UTC+3 2021/07/12
 --!strict
 
+--TODO: Add settings GuiSize or ViewportSize
+
 type TextObject = TextLabel | TextBox | TextButton
 
 -- Constants
@@ -22,6 +24,11 @@ local forAll_Variable = "..."
 local forAll_min, forAll_max = "0", tostring(math.huge)
 local individual_min, individual_max = "0", tostring(math.huge)
 local individual_lower, individual_upper = "0", "0"
+
+local IsDataModelClosing = Instance.new("BoolValue")
+IsDataModelClosing.Value = false
+IsDataModelClosing.Name = "IsDataModelClosing"
+IsDataModelClosing.Parent = game:GetService("CoreGui")
 
 -- Services
 local TweenService = game:GetService("TweenService")
@@ -64,7 +71,7 @@ local themeColors = {
 }
 
 local plugin = plugin or getfenv().PluginManager():CreatePlugin()
-plugin.Name = "UIStrokeScalingPlugin"
+plugin.Name = "Scale UIStroke Objects"
 
 local dockWidgetInfo = DockWidgetPluginGuiInfo.new(
 	Enum.InitialDockState.Float,
@@ -86,7 +93,7 @@ local widget = plugin:CreateDockWidgetPluginGui(
 	dockWidgetInfo
 )
 
-widget.Title = "Scale UIStroke Thickness"
+widget.Title = "Scale UIStroke Objects"
 
 button.Click:Connect(function()
 	widget.Enabled = not widget.Enabled
@@ -100,9 +107,7 @@ if scr then
 	scr:Destroy()
 end
 
-local handler = Instance.new("LocalScript")
-handler.Name = "UIStrokeThicknessScaling"
-handler.Source = [[
+local localScriptSource = [[
 --!strict
 
 type TextObject = TextLabel | TextBox | TextButton
@@ -237,8 +242,12 @@ game.DescendantAdded:Connect(function(object)
 	onAdded(object)
 end)
 ]]
+
+local handler = Instance.new("LocalScript")
+handler.Name = "UIStrokeThicknessScaling"
+handler.Source = localScriptSource
 handler.Parent = ReplicatedFirst
-warn("[Scale UIStroke Thickness by @ProBaturay] New script " .. handler.Name .. " was added in ReplicatedFirst. Please, don't delete it.")
+warn("[Scale UIStroke Objects] New script " .. handler.Name .. " was added in ReplicatedFirst. Please, don't delete it.")
 
 local Frame = Instance.new("Frame")
 Frame.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -1124,7 +1133,7 @@ IndividualWarning.Size = UDim2.new(1, -16, 0.8, -8)
 IndividualWarning.BackgroundTransparency = 1
 IndividualWarning.Position = UDim2.new(0.5, 0, 1, -8)
 IndividualWarning.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-IndividualWarning.Parent = Workplace
+IndividualWarning.Parent = Individual
 
 local SelectText1 = Instance.new("TextLabel")
 SelectText1.Name = "SelectText"
@@ -1315,36 +1324,10 @@ local function adjustViewportSize()
 		ViewportSize.Text = math.floor(camera.ViewportSize.X) .. "x" .. math.floor(camera.ViewportSize.Y)
 		return
 	end
-	
-	--local temporaryScreenGui = Instance.new("ScreenGui")
-	--temporaryScreenGui.Parent = StarterGui
-
-	--local temporaryFrame = Instance.new("Frame")
-	--temporaryFrame.Active = false
-	--temporaryFrame.BackgroundTransparency = 1
-	--temporaryFrame.Size = UDim2.new(1, 0, 1, 0)
-	--temporaryFrame.Position = UDim2.new(10, 0, 10, 0)
-	--temporaryFrame.Parent = temporaryScreenGui
-	
-	--task.defer(function()
-	--	temporaryScreenGui:Destroy()
-	--end)
-	
-	--return temporaryFrame.AbsoluteSize
 end
 
 local function isTextObject(object: TextObject)
 	return object:IsA("TextLabel") or object:IsA("TextButton") or object:IsA("TextBox")
-end
-
-local function isNumber(num): boolean
-	if num then
-		if type(tonumber(num)) == "number" then
-			return true
-		end
-	end
-
-	return false
 end
 
 local function adjustAttributes(object: UIStroke, originalThickness, useScale, lowerScale, upperScale, scaleType, minThickness, maxThickness)
@@ -1357,19 +1340,25 @@ local function adjustAttributes(object: UIStroke, originalThickness, useScale, l
 	object:SetAttribute("MaxThickness", maxThickness)
 end
 
-local function scale(stroke: UIStroke, enable, typeOfAction: "ForAll" | "Individual")
+local function scaleUIStroke(stroke: UIStroke, enable: boolean, typeOfAction: "ForAll" | "Individual"): (boolean, string?)
 	if enable then
-		local parent = stroke.Parent
-
-		if not (parent and parent:IsA("GuiObject")) then 
-			return
+		local responsibleGuiObject = stroke.Parent
+		
+		if not responsibleGuiObject then return false, "Parent does not exist" end
+		
+		if not responsibleGuiObject:IsA("GuiObject") then
+			if responsibleGuiObject:FindFirstAncestorOfClass("LayerCollector") then
+				return false, "UIStroke must be parented to a 'GuiObject | '" .. stroke:GetFullName()
+			else
+				return false, "UIStroke must be parented to a 'GuiObject' and must be a descendant of a 'LayerCollector' | " .. stroke:GetFullName()
+			end
 		end
-
+		
 		local desiredThickness = stroke.Thickness
 		local lower, upper
 
 		local function determineDimension(condition)
-			local a, b = parent.AbsoluteSize.X, parent.AbsoluteSize.Y
+			local a, b = responsibleGuiObject.AbsoluteSize.X, responsibleGuiObject.AbsoluteSize.Y
 			return if condition == "LowerScale" then (if a > b then b else a) else (if a > b then a else b)
 		end
 
@@ -1377,7 +1366,7 @@ local function scale(stroke: UIStroke, enable, typeOfAction: "ForAll" | "Individ
 			local vector2
 
 			pcall(function()
-				vector2 = TextService:GetTextSize((parent :: TextObject).Text, (parent :: TextObject).TextSize, (parent :: TextObject).Font, (parent :: TextObject).AbsoluteSize)
+				vector2 = TextService:GetTextSize((responsibleGuiObject :: TextObject).Text, (responsibleGuiObject :: TextObject).TextSize, (responsibleGuiObject :: TextObject).Font, (responsibleGuiObject :: TextObject).AbsoluteSize)
 			end)
 
 			if vector2 then
@@ -1392,7 +1381,7 @@ local function scale(stroke: UIStroke, enable, typeOfAction: "ForAll" | "Individ
 			lower = stroke.Thickness / determineDimension("LowerScale")
 			upper = stroke.Thickness / determineDimension("UpperScale")
 		else
-			if isTextObject(parent :: TextObject) then
+			if isTextObject(responsibleGuiObject :: TextObject) then
 				if TEXTSIZE_METHOD == "GetTextSize" then
 					lower = stroke.Thickness / determineDimension("LowerScale")
 					upper = stroke.Thickness / determineDimension("UpperScale")
@@ -1402,7 +1391,16 @@ local function scale(stroke: UIStroke, enable, typeOfAction: "ForAll" | "Individ
 				upper = stroke.Thickness / determineDimension("UpperScale")
 			end
 		end
-
+		
+		local conn: RBXScriptConnection
+		conn = UIStroke:GetPropertyChangedSignal("Thickness"):Connect(function()
+			if not UIStroke:GetAttribute("OriginalThickness") then
+				conn:Disconnect()
+			end
+			
+			UIStroke:SetAttribute("OriginalThickness", UIStroke.Thickness)
+		end)
+		
 		if lower == math.huge or upper == math.huge then
 			if stroke:GetAttribute("UseScale") and not stroke:GetAttribute("ScaleType") then
 				warn("This UIStroke needs to be manually updated: " .. stroke:GetFullName())
@@ -1417,36 +1415,39 @@ local function scale(stroke: UIStroke, enable, typeOfAction: "ForAll" | "Individ
 			adjustAttributes(stroke, nil, false, nil, nil, nil, nil)
 		end
 	end
+	
+	return true
 end
 
 local function scaleAll(enable: boolean)
 	for i, v in game:GetDescendants() do
 		if v:IsA("UIStroke") then
-			scale(v, enable, "ForAll")
+			local scaled, reason = scaleUIStroke(v, enable, "ForAll")
+			if not scaled then
+				warn(reason)
+			end
+		end
+	end
+end
+
+local function setMinMax(object, minOrMax: string, num: number)
+	if object:IsA("UIStroke") and object:GetAttribute("UseScale") then
+		if minOrMax == "Max" then
+			object:SetAttribute("MaxMinThickness", num)
+		else
+			object:SetAttribute("MinMinThickness", num)
 		end
 	end
 end
 
 local function setMinMaxAll(min: number?, max: number?)
 	for i, v in game:GetDescendants() do
-		if v:IsA("UIStroke") and v:GetAttribute("UseScale") then
-			if min then
-				v:SetAttribute("MinThickness", min)
-			end
-			
-			if max then
-				v:SetAttribute("MaxThickness", max)
-			end
+		if min then
+			setMinMax(v, "Min", min)
 		end
-	end
-end
-
-local function setMinMax(object, minOrMax, num)
-	if object:GetAttribute("UseScale") then
-		if minOrMax == "Max" then
-			object:SetAttribute("MaxMinThickness", num)
-		else
-			object:SetAttribute("MinMinThickness", num)
+			
+		if max then
+			setMinMax(v, "Max", max)
 		end
 	end
 end
@@ -1478,6 +1479,85 @@ local function checkLimitsSameForAll(minOrMax: "Max" | "Min")
 	
 	return true
 end
+
+local function checkColorEquality(color1: Color3, color2: Color3)
+	return if color1.R == color2.R and color1.G == color2.G and color1.B == color2.B then true else false
+end
+
+local function findCorrespondingColor(property)
+	local function other()
+		return if currentTheme == "Dark" then "Light" else "Dark"
+	end
+	
+	for name, color in themeColors[other()] do
+		if checkColorEquality(themeColors[currentTheme][name], property) then
+			return color
+		end
+	end
+	
+	return
+end
+
+local function changeColors()
+	if (settings().Studio.Theme :: Instance).Name ~= currentTheme then
+		for i, v in widget:GetDescendants() do
+			for i, property in properties do
+				pcall(function()
+					if typeof(v[property]) == "Color3" then
+						v[property] = findCorrespondingColor(v[property])
+					end
+				end)
+			end
+		end
+	end
+	
+	currentTheme = (settings().Studio.Theme :: Instance).Name
+end
+
+local function onStudioClosing()
+	IsDataModelClosing.Value = true
+end
+
+IndividualInsert.Activated:Connect(function()
+	local stroke = Selection:Get()[1]
+	local scaled, reason = scaleUIStroke(stroke, true, "Individual")
+	
+	if not scaled then
+		return warn(reason)
+	end
+	
+	individual_min = "0"
+	individual_max = tostring(math.huge)
+	individual_lower = stroke:GetAttribute("LowerScale")
+	individual_upper = stroke:GetAttribute("UpperScale")
+	IndividualMaxPixelsBox.TextEditable = true
+	IndividualMinPixelsBox.TextEditable = true
+	IndividualMinPixelsBox.Text = individual_min
+	IndividualMaxPixelsBox.Text = individual_max
+	IndividualLowerIndicator.Text = stroke:GetAttribute("LowerScale")
+	IndividualUpperIndicator.Text = stroke:GetAttribute("UpperScale")
+	IndividualCurrentScale.Text = "Current type: " .. individual_ScaleType
+end)
+
+IndividualDelete.Activated:Connect(function()
+	local scaled, reason = scaleUIStroke(Selection:Get()[1], false, "Individual")
+
+	if not scaled then
+		return warn(reason)
+	end
+	
+	individual_min = "No info"
+	individual_max = "No info"
+	individual_lower = "No info"
+	individual_upper = "No info"
+	IndividualMaxPixelsBox.TextEditable = false
+	IndividualMinPixelsBox.TextEditable = false
+	IndividualMinPixelsBox.Text = "No info"
+	IndividualMaxPixelsBox.Text = "No info"
+	IndividualLowerIndicator.Text = "No info"
+	IndividualUpperIndicator.Text = "No info"
+	IndividualCurrentScale.Text = "Current type: No info"
+end)
 
 AdjustScaleForAll.Activated:Connect(function()
 	TweenService:Create(OptionsMenu, TInfo_Slide, {Position = OPTIONS_POSITION}):Play()
@@ -1547,52 +1627,50 @@ ForAllDelete.Activated:Connect(function()
 end)
 
 ForAllMaxPixelsBox.FocusLost:Connect(function()
-	local input = ForAllMaxPixelsBox.Text
+	local input = tonumber(ForAllMaxPixelsBox.Text)
 
-	if isNumber(input) then
+	if input then
 		if forAll_max ~= forAll_Variable or tonumber(forAll_min) then
-			if (tonumber(input) :: number) < tonumber(forAll_min) :: number then
+			if (input :: number) < tonumber(forAll_min) :: number then
 				ForAllMaxPixelsBox.Text = forAll_max
 				return warn("MaxThickness cannot be smaller than MinThickness")
 			end
 		end
-		
-		if (tonumber(input) :: number) < 0 then
+
+		if (input :: number) < 0 then
 			ForAllMaxPixelsBox.Text = forAll_max
 			return warn("Must be a positive number")
 		end
 
 		setMinMaxAll(nil, tonumber(input))
-		ForAllMaxPixelsBox.Text = input
-		forAll_max = input
+		ForAllMaxPixelsBox.Text = tostring(input)
+		forAll_max = tostring(input)
 		warn("All UIStroke objects' thickness now can be raised to " .. input .. " maximum")
-	elseif input == "" then
-
 	else
 		ForAllMaxPixelsBox.Text = forAll_max
 	end
 end)
 
 ForAllMinPixelsBox.FocusLost:Connect(function()
-	local input = ForAllMinPixelsBox.Text
+	local input = tonumber(ForAllMinPixelsBox.Text)
 
-	if isNumber(input) then
+	if input then
 		if forAll_min ~= forAll_Variable or tonumber(forAll_max) then
-			if tonumber(input) :: number > tonumber(forAll_max) :: number then
+			if input :: number > tonumber(forAll_max) :: number then
 				warn("MinThickness cannot be larger than MaxThickness")
 				ForAllMinPixelsBox.Text = forAll_min
 				return
 			end
 		end
-		
-		if (tonumber(input) :: number) < 0 then
+
+		if (input :: number) < 0 then
 			ForAllMinPixelsBox.Text = forAll_min
 			return warn("Must be a positive number")
 		end
-		
+
 		setMinMaxAll(tonumber(input), nil)
-		ForAllMinPixelsBox.Text = input
-		forAll_min = input
+		ForAllMinPixelsBox.Text = tostring(input)
+		forAll_min = tostring(input)
 		warn("All UIStroke objects' thickness now can be lowered to " .. input .. " minimum")
 	elseif input == "" then
 
@@ -1615,21 +1693,21 @@ end)
 
 Selection.SelectionChanged:Connect(function()
 	local objects = Selection:Get()
-	
+
 	local function setState(a)
 		ReturnFromIndividual.Visible = a
 		SelectText.Visible = a
 		IndividualWarning.Visible = not a
 		UIStrokeInfo.Visible = false
 	end
-	
+
 	if #objects > 1 then
 		setState(false)
 	elseif #objects == 0 then
 		setState(true)
 	else
 		local stroke = objects[1]
-		
+
 		pcall(function()
 			if stroke:IsA("UIStroke") then
 				ReturnFromIndividual.Visible = false
@@ -1665,87 +1743,119 @@ Selection.SelectionChanged:Connect(function()
 end)
 
 IndividualMaxPixelsBox.FocusLost:Connect(function()
-	local input = IndividualMaxPixelsBox.Text
+	local input = tonumber(IndividualMaxPixelsBox.Text)
 
-	if isNumber(input) then
-		if (tonumber(input) :: number) < tonumber(individual_min) :: number then
+	if input then
+		if (input :: number) < tonumber(individual_min) :: number then
 			warn("MaxThickness cannot be smaller than MinThickness")
 			IndividualMaxPixelsBox.Text = individual_max
 			return
 		end
 
-		if (tonumber(input) :: number) < 0 then
+		if (input :: number) < 0 then
 			IndividualMaxPixelsBox.Text = individual_max
 			return warn("Must be a positive number")
 		end
 
-		setMinMaxAll(nil, tonumber(input))
-		IndividualMaxPixelsBox.Text = input
-		individual_max = input
-	elseif input == "" then
-		
+		setMinMax(Selection:Get()[1], "Max", input)
+		IndividualMaxPixelsBox.Text = tostring(input)
+		individual_max = tostring(input)
 	else
 		IndividualMaxPixelsBox.Text = individual_max
 	end
 end)
 
 IndividualMinPixelsBox.FocusLost:Connect(function()
-	local input = IndividualMinPixelsBox.Text
+	local input = tonumber(IndividualMinPixelsBox.Text)
 
-	if isNumber(input) then
-		if (tonumber(input) :: number) > tonumber(individual_max) :: number then
+	if input then
+		if (input :: number) > tonumber(individual_max) :: number then
 			warn("MinThickness cannot be larger than MaxThickness")
 			IndividualMinPixelsBox.Text = individual_min
 			return
 		end
 
-		if (tonumber(input) :: number) < 0 then
+		if (input :: number) < 0 then
 			IndividualMinPixelsBox.Text = individual_min
 			return warn("Must be a positive number")
 		end
 
-		setMinMaxAll(tonumber(input), nil)
-		IndividualMinPixelsBox.Text = input
-		individual_min = input
-	elseif input == "" then
-
+		setMinMax(Selection:Get()[1], "Min", input)
+		IndividualMinPixelsBox.Text = tostring(input)
+		individual_min = tostring(input)
 	else
 		IndividualMinPixelsBox.Text = individual_min
 	end
 end)
 
-IndividualInsert.Activated:Connect(function()
-	local stroke = Selection:Get()[1]
-	scale(stroke, true, "Individual")
-	individual_min = "0"
-	individual_max = tostring(math.huge)
-	individual_lower = stroke:GetAttribute("LowerScale")
-	individual_upper = stroke:GetAttribute("UpperScale")
-	IndividualMaxPixelsBox.TextEditable = true
-	IndividualMinPixelsBox.TextEditable = true
-	IndividualMinPixelsBox.Text = individual_min
-	IndividualMaxPixelsBox.Text = individual_max
-	IndividualLowerIndicator.Text = stroke:GetAttribute("LowerScale")
-	IndividualUpperIndicator.Text = stroke:GetAttribute("UpperScale")
-	IndividualCurrentScale.Text = "Current type: " .. individual_ScaleType
+workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(function()
+	adjustViewportSize()
 end)
 
-IndividualDelete.Activated:Connect(function()
-	scale(Selection:Get()[1], false, "Individual")
-	individual_min = "No info"
-	individual_max = "No info"
-	individual_lower = "No info"
-	individual_upper = "No info"
-	IndividualMaxPixelsBox.TextEditable = false
-	IndividualMinPixelsBox.TextEditable = false
-	IndividualMinPixelsBox.Text = "No info"
-	IndividualMaxPixelsBox.Text = "No info"
-	IndividualLowerIndicator.Text = "No info"
-	IndividualUpperIndicator.Text = "No info"
-	IndividualCurrentScale.Text = "Current type: No info"
+settings().Studio.ThemeChanged:Connect(function()
+	changeColors()
 end)
 
--- Starter
+local ModuleScript = Instance.new("ModuleScript")
+ModuleScript.Source = [[
+local RunService = game:GetService("RunService")
+local checkbackWaitTime = RunService.Heartbeat:Wait()
+local IsDataModelClosing = script.Parent
+local a = os.clock()
+
+while (os.clock() - a) < checkbackWaitTime and not IsDataModelClosing.Value do
+	task.wait()
+end
+
+local localScriptSource = [[]] .. localScriptSource ..  string.format([[%s%s
+
+local function adjustAttributes(object: UIStroke, originalThickness, useScale, lowerScale, upperScale, scaleType, minThickness, maxThickness)
+	object:SetAttribute("OriginalThickness", originalThickness)
+	object:SetAttribute("UseScale", useScale)
+	object:SetAttribute("LowerScale", lowerScale)
+	object:SetAttribute("UpperScale", upperScale)
+	object:SetAttribute("ScaleType", scaleType)
+	object:SetAttribute("MinThickness", minThickness)
+	object:SetAttribute("MaxThickness", maxThickness)
+end
+if not IsDataModelClosing.Value then
+	for i, object in game:GetDescendants() do
+		if object:IsA("UIStroke") then
+			adjustAttributes(object, nil, nil, nil, nil, nil, nil)
+		elseif object:IsA("LocalScript") or object.Name == "UIStrokeThicknessScaling" then
+			if string.find(object.Source, localScriptSource, 1, true) then
+				object:Destroy()
+			end
+		end
+	end
+end
+
+IsDataModelClosing:Destroy()
+return {}
+]], "]", "]")
+ModuleScript.Parent = IsDataModelClosing
+
+plugin.Unloading:Once(function()
+	coroutine.wrap(function()
+		local a = require(ModuleScript :: never) :: any
+	end)()
+end)
+
+if RunService:IsClient() then
+	local s, e = pcall(function()
+		game.OnClose = function() end
+	end)
+	
+	if s then
+		game.OnClose = nil
+		game.OnClose = onStudioClosing
+	else
+		warn("Uninstallation policy of the plugin 'Scale UIStroke Objects' failed. 'game.OnClose was already assigned a function'")
+	end
+else
+	game:BindToClose(onStudioClosing)	
+end
+
 ForAllMaxPixelsBox.Text = forAll_Variable
 ForAllMinPixelsBox.Text = forAll_Variable
 
@@ -1783,48 +1893,5 @@ if TESTING_PROCESS then
 	plugin.Parent = workspace
 end
 
-local function checkColorEquality(color1: Color3, color2: Color3)
-	return if color1.R == color2.R and color1.G == color2.G and color1.B == color2.B then true else false
-end
-
-local function findCorrespondingColor(property)
-	local function other()
-		return if currentTheme == "Dark" then "Light" else "Dark"
-	end
-	
-	for name, color in themeColors[other()] do
-		if checkColorEquality(themeColors[currentTheme][name], property) then
-			return color
-		end
-	end
-	
-	return
-end
-
-local function changeColors()
-	if settings().Studio.Theme.Name :: any ~= currentTheme then
-		for i, v in widget:GetDescendants() do
-			for i, property in properties do
-				pcall(function()
-					if typeof(v[property]) == "Color3" then
-						v[property] = findCorrespondingColor(v[property])
-					end
-				end)
-			end
-		end
-	end
-	
-	currentTheme = settings().Studio.Theme.Name :: any
-end
-
-workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(function()
-	adjustViewportSize()
-end)
-
 adjustViewportSize()
-
-settings().Studio.ThemeChanged:Connect(function()
-	changeColors()
-end)
-
 changeColors()
