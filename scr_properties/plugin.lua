@@ -28,9 +28,9 @@ local dockWidgetInfo = DockWidgetPluginGuiInfo.new(
 	315
 )
 
-local toolbar = plugin:CreateToolbar("Script Source Properties")
+local toolbar = plugin:CreateToolbar("ScriptProperties")
 
-local button = toolbar:CreateButton("Open Menu", "Check total lines and characters of your scripts!", "http://www.roblox.com/asset/?id=14050607586") -- TODO change icon
+local button = toolbar:CreateButton("Open Menu", "Check total lines and characters of your scripts!", "http://www.roblox.com/asset/?id=14329255055")
 button.ClickableWhenViewportHidden = true
 
 local widget: DockWidgetPluginGui = plugin:CreateDockWidgetPluginGui(
