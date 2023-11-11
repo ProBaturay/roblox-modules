@@ -1,5 +1,7 @@
 --21:37 UTC+3 24/07/2023
---!strict
+--Last update: 17:13 UTC+3 11/11/2023
+--!nonstrict
+--!native
 
 local SELECTION_BACKGROUND = Color3.fromRGB(15, 178, 227)
 local ACTIVE_SCRIPT_BACKGROUND = Color3.fromRGB(142, 114, 255)
@@ -10,27 +12,28 @@ local Selection = game:GetService("Selection")
 local HTTPService = game:GetService("HttpService")
 local TweenService = game:GetService("TweenService")
 local ScriptEditorService = game:GetService("ScriptEditorService")
+local StudioService = game:GetService("StudioService")
 
 if RunService:IsRunning() then
 	return
 end
 
 local plugin = plugin or getfenv().PluginManager():CreatePlugin()
-plugin.Name = "ScriptPropertiesPlugin"
+plugin.Name = "UIStrokeScalingPlugin"
 
 local dockWidgetInfo = DockWidgetPluginGuiInfo.new(
 	Enum.InitialDockState.Float,
 	false,
 	false,
-	300,
 	315,
-	300,
+	315,
+	315,
 	315
 )
 
-local toolbar = plugin:CreateToolbar("ScriptProperties")
+local toolbar = plugin:CreateToolbar("Script Source Properties")
 
-local button = toolbar:CreateButton("Open Menu", "Check total lines and characters of your scripts!", "http://www.roblox.com/asset/?id=14329255055")
+local button = toolbar:CreateButton("Open Menu", "Check total lines and characters of your scripts!", "http://www.roblox.com/asset/?id=14329255055") -- TODO change icon
 button.ClickableWhenViewportHidden = true
 
 local widget: DockWidgetPluginGui = plugin:CreateDockWidgetPluginGui(
@@ -130,7 +133,7 @@ UIPadding.PaddingBottom = UDim.new(0, 10)
 UIPadding.Parent = ScrollingFrame
 
 local Example = Instance.new("Frame")
-Example.Name = "Example"
+Example.Name = "Directory"
 Example.Size = UDim2.new(1, -16, 0, 25)
 Example.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Example.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
@@ -145,7 +148,7 @@ UICorner1.Parent = Example
 
 local FullName = Instance.new("TextLabel")
 FullName.Name = "FullName"
-FullName.Size = UDim2.new(1, -110, 1, 0)
+FullName.Size = UDim2.new(0.9, -130, 1, 0)
 FullName.BorderColor3 = Color3.fromRGB(0, 0, 0)
 FullName.BackgroundTransparency = 1
 FullName.Position = UDim2.new(0, 8, 0, 0)
@@ -161,10 +164,10 @@ FullName.Parent = Example
 local Characters = Instance.new("TextLabel")
 Characters.Name = "Characters"
 Characters.AnchorPoint = Vector2.new(1, 0)
-Characters.Size = UDim2.new(0, 70, 1, 0)
+Characters.Size = UDim2.new(0, 72, 1, 0)
 Characters.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Characters.BackgroundTransparency = 1
-Characters.Position = UDim2.new(1, -38, 0, 0)
+Characters.Position = UDim2.new(0.9, -20, 0, 0)
 Characters.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Characters.TextTruncate = Enum.TextTruncate.AtEnd
 Characters.TextSize = 14
@@ -389,7 +392,7 @@ ScriptCharacters.ZIndex = 3
 ScriptCharacters.AnchorPoint = Vector2.new(1, 0.5)
 ScriptCharacters.Size = UDim2.new(0, 70, 0, 20)
 ScriptCharacters.BackgroundTransparency = 1
-ScriptCharacters.Position = UDim2.new(0.6, 60, 0.5, 0)
+ScriptCharacters.Position = UDim2.new(0.9, -20, 0.5, 0)
 ScriptCharacters.BorderSizePixel = 0
 ScriptCharacters.TextTruncate = Enum.TextTruncate.AtEnd
 ScriptCharacters.TextSize = 14
@@ -405,7 +408,7 @@ ScriptObjects.ZIndex = 3
 ScriptObjects.AnchorPoint = Vector2.new(1, 0.5)
 ScriptObjects.Size = UDim2.new(0, 70, 0, 20)
 ScriptObjects.BackgroundTransparency = 1
-ScriptObjects.Position = UDim2.new(0.2, 100, 0.5, 0)
+ScriptObjects.Position = UDim2.new(0.8, -60, 0.5, 0)
 ScriptObjects.TextTruncate = Enum.TextTruncate.AtEnd
 ScriptObjects.TextSize = 14
 ScriptObjects.TextColor3 = Color3.fromRGB(188, 188, 188)
@@ -467,7 +470,7 @@ LocalScriptCharacters.ZIndex = 3
 LocalScriptCharacters.AnchorPoint = Vector2.new(1, 0.5)
 LocalScriptCharacters.Size = UDim2.new(0, 70, 0, 20)
 LocalScriptCharacters.BackgroundTransparency = 1
-LocalScriptCharacters.Position = UDim2.new(0.6, 60, 0.5, 0)
+LocalScriptCharacters.Position = UDim2.new(0.9, -20, 0.5, 0)
 LocalScriptCharacters.TextTruncate = Enum.TextTruncate.AtEnd
 LocalScriptCharacters.TextSize = 14
 LocalScriptCharacters.TextColor3 = Color3.fromRGB(188, 188, 188)
@@ -482,7 +485,7 @@ LocalScriptObjects.ZIndex = 3
 LocalScriptObjects.AnchorPoint = Vector2.new(1, 0.5)
 LocalScriptObjects.Size = UDim2.new(0, 70, 0, 20)
 LocalScriptObjects.BackgroundTransparency = 1
-LocalScriptObjects.Position = UDim2.new(0.2, 100, 0.5, 0)
+LocalScriptObjects.Position = UDim2.new(0.8, -60, 0.5, 0)
 LocalScriptObjects.TextTruncate = Enum.TextTruncate.AtEnd
 LocalScriptObjects.TextSize = 14
 LocalScriptObjects.TextColor3 = Color3.fromRGB(188, 188, 188)
@@ -546,7 +549,7 @@ ModuleScriptCharacters.ZIndex = 3
 ModuleScriptCharacters.AnchorPoint = Vector2.new(1, 0.5)
 ModuleScriptCharacters.Size = UDim2.new(0, 70, 0, 20)
 ModuleScriptCharacters.BackgroundTransparency = 1
-ModuleScriptCharacters.Position = UDim2.new(0.6, 60, 0.5, 0)
+ModuleScriptCharacters.Position = UDim2.new(0.9, -20, 0.5, 0)
 ModuleScriptCharacters.BorderSizePixel = 0
 ModuleScriptCharacters.TextTruncate = Enum.TextTruncate.AtEnd
 ModuleScriptCharacters.TextSize = 14
@@ -562,7 +565,7 @@ ModuleScriptObjects.ZIndex = 3
 ModuleScriptObjects.AnchorPoint = Vector2.new(1, 0.5)
 ModuleScriptObjects.Size = UDim2.new(0, 70, 0, 20)
 ModuleScriptObjects.BackgroundTransparency = 1
-ModuleScriptObjects.Position = UDim2.new(0.2, 100, 0.5, 0)
+ModuleScriptObjects.Position = UDim2.new(0.8, -60, 0.5, 0)
 ModuleScriptObjects.BorderSizePixel = 0
 ModuleScriptObjects.TextTruncate = Enum.TextTruncate.AtEnd
 ModuleScriptObjects.TextSize = 14
@@ -626,7 +629,7 @@ AllCharacters.ZIndex = 3
 AllCharacters.AnchorPoint = Vector2.new(1, 0.5)
 AllCharacters.Size = UDim2.new(0, 70, 0, 20)
 AllCharacters.BackgroundTransparency = 1
-AllCharacters.Position = UDim2.new(0.6, 60, 0.5, 0)
+AllCharacters.Position = UDim2.new(0.9, -20, 0.5, 0)
 AllCharacters.TextTruncate = Enum.TextTruncate.AtEnd
 AllCharacters.TextSize = 14
 AllCharacters.TextColor3 = Color3.fromRGB(188, 188, 188)
@@ -641,7 +644,7 @@ AllObjects.ZIndex = 3
 AllObjects.AnchorPoint = Vector2.new(1, 0.5)
 AllObjects.Size = UDim2.new(0, 70, 0, 20)
 AllObjects.BackgroundTransparency = 1
-AllObjects.Position = UDim2.new(0.2, 100, 0.5, 0)
+AllObjects.Position = UDim2.new(0.8, -60, 0.5, 0)
 AllObjects.TextTruncate = Enum.TextTruncate.AtEnd
 AllObjects.TextSize = 14
 AllObjects.TextColor3 = Color3.fromRGB(188, 188, 188)
@@ -650,49 +653,52 @@ AllObjects.TextWrapped = true
 AllObjects.Font = Enum.Font.Gotham
 AllObjects.Parent = Frame3
 
-local TextLabel4 = Instance.new("TextLabel")
-TextLabel4.ZIndex = 3
-TextLabel4.AnchorPoint = Vector2.new(1, 1)
-TextLabel4.Size = UDim2.new(0, 70, 0, 20)
-TextLabel4.BackgroundTransparency = 1
-TextLabel4.Position = UDim2.new(0.6, 60, 0, 0)
-TextLabel4.TextTruncate = Enum.TextTruncate.AtEnd
-TextLabel4.TextSize = 14
-TextLabel4.TextColor3 = Color3.fromRGB(188, 188, 188)
-TextLabel4.Text = "Characters"
-TextLabel4.TextWrapped = true
-TextLabel4.Font = Enum.Font.Gotham
-TextLabel4.Parent = Stats_
+local CharactersLabel = Instance.new("TextLabel")
+CharactersLabel.Name = "CharactersLabel"
+CharactersLabel.ZIndex = 3
+CharactersLabel.AnchorPoint = Vector2.new(1, 1)
+CharactersLabel.Size = UDim2.new(0, 72, 0, 20)
+CharactersLabel.BackgroundTransparency = 1
+CharactersLabel.Position = UDim2.new(0.9, -20, 0, 0)
+CharactersLabel.TextTruncate = Enum.TextTruncate.AtEnd
+CharactersLabel.TextSize = 14
+CharactersLabel.TextColor3 = Color3.fromRGB(188, 188, 188)
+CharactersLabel.Text = "Characters"
+CharactersLabel.TextWrapped = true
+CharactersLabel.Font = Enum.Font.Gotham
+CharactersLabel.Parent = Stats_
 
-local TextLabel5 = Instance.new("TextLabel")
-TextLabel5.ZIndex = 3
-TextLabel5.AnchorPoint = Vector2.new(1, 1)
-TextLabel5.Size = UDim2.new(0, 40, 0, 20)
-TextLabel5.BackgroundTransparency = 1
-TextLabel5.Position = UDim2.new(1, -4, 0, 0)
-TextLabel5.BorderSizePixel = 0
-TextLabel5.TextTruncate = Enum.TextTruncate.AtEnd
-TextLabel5.TextSize = 14
-TextLabel5.TextColor3 = Color3.fromRGB(188, 188, 188)
-TextLabel5.Text = "Lines"
-TextLabel5.TextWrapped = true
-TextLabel5.Font = Enum.Font.Gotham
-TextLabel5.Parent = Stats_
+local LinesLabel = Instance.new("TextLabel")
+LinesLabel.Name = "LinesLabel"
+LinesLabel.ZIndex = 3
+LinesLabel.AnchorPoint = Vector2.new(1, 1)
+LinesLabel.Size = UDim2.new(0, 40, 0, 20)
+LinesLabel.BackgroundTransparency = 1
+LinesLabel.Position = UDim2.new(1, -4, 0, 0)
+LinesLabel.BorderSizePixel = 0
+LinesLabel.TextTruncate = Enum.TextTruncate.AtEnd
+LinesLabel.TextSize = 14
+LinesLabel.TextColor3 = Color3.fromRGB(188, 188, 188)
+LinesLabel.Text = "Lines"
+LinesLabel.TextWrapped = true
+LinesLabel.Font = Enum.Font.Gotham
+LinesLabel.Parent = Stats_
 
-local TextLabel6 = Instance.new("TextLabel")
-TextLabel6.ZIndex = 3
-TextLabel6.AnchorPoint = Vector2.new(1, 1)
-TextLabel6.Size = UDim2.new(0, 70, 0, 20)
-TextLabel6.BackgroundTransparency = 1
-TextLabel6.Position = UDim2.new(0.2, 102, 0, 0)
-TextLabel6.BorderSizePixel = 0
-TextLabel6.TextTruncate = Enum.TextTruncate.AtEnd
-TextLabel6.TextSize = 14
-TextLabel6.TextColor3 = Color3.fromRGB(188, 188, 188)
-TextLabel6.Text = "Objects"
-TextLabel6.TextWrapped = true
-TextLabel6.Font = Enum.Font.Gotham
-TextLabel6.Parent = Stats_
+local ObjectsLabel = Instance.new("TextLabel")
+ObjectsLabel.Name = "ObjectsLabel"
+ObjectsLabel.ZIndex = 3
+ObjectsLabel.AnchorPoint = Vector2.new(1, 1)
+ObjectsLabel.Size = UDim2.new(0, 70, 0, 20)
+ObjectsLabel.BackgroundTransparency = 1
+ObjectsLabel.Position = UDim2.new(0.8, -60, 0, 0)
+ObjectsLabel.BorderSizePixel = 0
+ObjectsLabel.TextTruncate = Enum.TextTruncate.AtEnd
+ObjectsLabel.TextSize = 14
+ObjectsLabel.TextColor3 = Color3.fromRGB(188, 188, 188)
+ObjectsLabel.Text = "Objects"
+ObjectsLabel.TextWrapped = true
+ObjectsLabel.Font = Enum.Font.Gotham
+ObjectsLabel.Parent = Stats_
 
 local TextLabel7 = Instance.new("TextLabel")
 TextLabel7.ZIndex = 3
@@ -775,6 +781,7 @@ local themeColors = {
 	},
 }
 
+--| An implementation of table.find which includes keys
 local function table_find<k, v>(tab: {[k]: v}, val): k?
 	for k, v in tab do
 		if val == v then
@@ -868,17 +875,37 @@ local function tryOpeningDoc(scr: LuaSourceContainer)
 	end
 end
 
+
+local function findFrameByDoc(doc: ScriptDocument): Frame
+	local scr = doc:GetScript()
+	local id = table_find(inScriptGUIDs, scr)
+
+	for _, frame in ScrollingFrame:GetDescendants() do
+		local frameId = frame:GetAttribute("ID")
+
+		if frame:IsA("Frame") and frameId and frameId == id then
+			return frame
+		end
+	end
+
+	return nil :: never
+end
+
+local function findDocFromScript(scr: LuaSourceContainer)
+	return ScriptEditorService:FindScriptDocument(scr)
+end
+
 local function setSelectionState(scr: Script, frame: Frame)
 	local objects = Selection:Get()
 	local pos = table.find(objects, scr)
 	
 	if pos then
 		table.remove(objects, pos)
-		frame.BackgroundColor3 = themeColors[currentTheme]["FrameBackground"]
+		--frame.BackgroundColor3 = themeColors[currentTheme]["FrameBackground"]
 		
 		if toggle_visibility then
 			local s, e = pcall(function()
-				local doc = ScriptEditorService:FindScriptDocument(scr)
+				local doc = findDocFromScript(scr)
 				doc:CloseAsync()
 			end)
 			
@@ -945,6 +972,7 @@ local function insert(scr: Script)
 		local onFullName = false
 		
 		local newFrame = Example:Clone()
+		newFrame.Name = "ScriptStatsBase"
 		newFrame.Visible = false
 		newFrame.LayoutOrder = #ScrollingFrame:GetDescendants() - 2
 		newFrame.Parent = ScrollingFrame
@@ -987,16 +1015,15 @@ local function insert(scr: Script)
 				Lines.Text = tostring(#tableOfLines)
 				Characters.Text = tostring(#source)
 			else
-				local lines_without_whitespace = 0
 				for i, line in tableOfLines do
-					if not (line == "" or string.match(line, "^%s+$")) then
-						lines_without_whitespace += 1
+					if line == "" or string.match(line, "^%s+$") then
+						table.remove(tableOfLines, i)
 					end
 				end
 				
 				local without_whitespace = string.gsub(source, "%s+", "")
 				
-				Lines.Text = tostring(lines_without_whitespace)
+				Lines.Text = tostring(#tableOfLines)
 				Characters.Text = tostring(#without_whitespace)
 			end
 			
@@ -1098,26 +1125,12 @@ local function isObjectSelected(object)
 	return false
 end
 
-local function findFrameByDoc(doc: ScriptDocument): Frame
-	local scr = doc:GetScript()
-	local id = table_find(inScriptGUIDs, scr)
-
-	for _, frame in ScrollingFrame:GetDescendants() do
-		local frameId = frame:GetAttribute("ID")
-
-		if frame:IsA("Frame") and frameId and frameId == id then
-			return frame
-		end
-	end
-
-	return nil :: never
-end
-
 local function changeDocFrameBackground(doc: ScriptDocument, state: boolean)
 	local scr = doc:GetScript()
 	local frame = findFrameByDoc(doc)
+	
 	if frame then
-		frame.BackgroundColor3 = if state then ACTIVE_SCRIPT_BACKGROUND else (if isObjectSelected(scr) then SELECTION_BACKGROUND else themeColors[currentTheme]["FrameBackground"])
+		frame.BackgroundColor3 = if state then ACTIVE_SCRIPT_BACKGROUND else (themeColors[currentTheme]["FrameBackground"])
 	end
 end
 
@@ -1140,6 +1153,14 @@ local function changeObjectCounters()
 	LocalScriptObjects.Text = tostring(Scr_LocalScript)
 end
 
+local function findFrameAndSetCanvasPosition(doc: ScriptDocument)
+	local frame = findFrameByDoc(doc)
+	
+	if frame then
+		TweenService:Create(ScrollingFrame, TInfo_TextChange, {CanvasPosition = calculateCanvasPosition(frame)}):Play()
+	end
+end
+
 Selection.SelectionChanged:Connect(function()
 	local objects = Selection:Get()
 	
@@ -1148,7 +1169,7 @@ Selection.SelectionChanged:Connect(function()
 			local id = frame:GetAttribute("ID")
 			local scr = inScriptGUIDs[id]
 
-			frame.BackgroundColor3 = if table.find(objects, scr) then (if ScriptEditorService:FindScriptDocument(scr) then ACTIVE_SCRIPT_BACKGROUND else SELECTION_BACKGROUND) else (if ScriptEditorService:FindScriptDocument(scr) then ACTIVE_SCRIPT_BACKGROUND else themeColors[currentTheme]["FrameBackground"])
+			frame.BackgroundColor3 = if table.find(objects, scr) then (if findDocFromScript(scr) then ACTIVE_SCRIPT_BACKGROUND else SELECTION_BACKGROUND) else (if findDocFromScript(scr) then ACTIVE_SCRIPT_BACKGROUND else themeColors[currentTheme]["FrameBackground"])
 		end
 	end
 end)
@@ -1177,15 +1198,19 @@ intValue.Changed:Connect(changeObjectCounters)
 
 ScriptEditorService.TextDocumentDidOpen:Connect(function(doc: ScriptDocument)
 	changeDocFrameBackground(doc, true)
-
-	local frame = findFrameByDoc(doc)
-	if frame then
-		TweenService:Create(ScrollingFrame, TInfo_TextChange, {CanvasPosition = calculateCanvasPosition(frame)}):Play()
-	end
+	findFrameAndSetCanvasPosition(doc)
 end)
 
 ScriptEditorService.TextDocumentDidClose:Connect(function(doc: ScriptDocument)
 	changeDocFrameBackground(doc, false)
+end)
+
+StudioService:GetPropertyChangedSignal("ActiveScript"):Connect(function()
+	local doc = findDocFromScript(StudioService.ActiveScript)
+	
+	if doc then
+		findFrameAndSetCanvasPosition(doc)
+	end
 end)
 
 for _, v in game:GetDescendants() do
