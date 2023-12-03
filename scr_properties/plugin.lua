@@ -145,7 +145,7 @@ ScriptScrollingFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 ScriptScrollingFrame.CanvasSize = UDim2.fromScale(0, 0)
 ScriptScrollingFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
 ScriptScrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
-ScriptScrollingFrame.ScrollBarThickness = 3
+ScriptScrollingFrame.ScrollBarThickness = 6
 ScriptScrollingFrame.Parent = MainMenu
 
 local UIStroke1 = Instance.new("UIStroke")
@@ -614,6 +614,7 @@ SettingsScrollingFrame.Active = true
 SettingsScrollingFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 SettingsScrollingFrame.CanvasSize = UDim2.fromScale(0, 0)
 SettingsScrollingFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+SettingsScrollingFrame.ScrollBarThickness = 6
 SettingsScrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
 SettingsScrollingFrame.Parent = SettingsMenu
 
