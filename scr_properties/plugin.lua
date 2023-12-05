@@ -36,7 +36,7 @@ local dockWidgetInfo = DockWidgetPluginGuiInfo.new(
 	false,
 	false,
 	340,
-	334,
+	600,
 	340,
 	334
 )
