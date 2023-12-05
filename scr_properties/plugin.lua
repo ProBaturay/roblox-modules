@@ -5,15 +5,9 @@
 
 type nLuaSourceContainer = LuaSourceContainer & {Source: any}
 
---local SELECTION_BACKGROUND = Color3.fromRGB(15, 178, 227)
---local ACTIVE_SCRIPT_BACKGROUND = Color3.fromRGB(142, 114, 255)
---local INCREASE = Color3.fromRGB(0, 255, 0)
---local DECREASE = Color3.fromRGB(255, 0, 0)
---local CHANGE_TEXT = Color3.fromRGB(15, 178, 227)
-
 local constants = {
 	[1] = Color3.fromRGB(15, 178, 227), -- selection
-	[2] = Color3.fromRGB(15, 178, 227), -- delta
+	[2] = Color3.fromRGB(15, 178, 227), -- hover
 	[3] = Color3.fromRGB(255, 0, 0),    -- decrease
 	[4] = Color3.fromRGB(0, 255, 0),    -- increase
 	[5] = Color3.fromRGB(142, 114, 255) -- active
@@ -42,9 +36,9 @@ local dockWidgetInfo = DockWidgetPluginGuiInfo.new(
 	false,
 	false,
 	340,
+	334,
 	340,
-	340,
-	340
+	334
 )
 
 local toolbar = plugin:CreateToolbar("Script Properties")
@@ -816,6 +810,7 @@ TextLabel1.BackgroundTransparency = 1
 TextLabel1.TextSize = 14
 TextLabel1.TextColor3 = Color3.fromRGB(188, 188, 188)
 TextLabel1.Text = "Toggle script visibility by clicking on the list"
+TextLabel1.TextTruncate = Enum.TextTruncate.AtEnd
 TextLabel1.TextWrapped = true
 TextLabel1.TextWrap = true
 TextLabel1.Font = Enum.Font.Gotham
@@ -1861,7 +1856,6 @@ local function changeTheme(theme: string?)
 		
 		for label, tween: Tween in textColorTweens do
 			if tween.PlaybackState ~= Enum.PlaybackState.Completed then
-				print("234")
 				tween:Cancel()
 				
 				local instance = tween.Instance :: TextLabel
@@ -1907,12 +1901,12 @@ end
 
 local function calculateCanvasPosition(frame: Frame): Vector2
 	local examplesBefore = frame.LayoutOrder - 3
-	local numberOfPaddings = frame.LayoutOrder
+	local numberOfPaddings = frame.LayoutOrder + 1
 	
 	local totalScriptStatsLength = (examplesBefore * Directory.Size.Y.Offset)
 	local totalGapLength = (numberOfPaddings * (UIListLayout.Padding.Offset))
 	
-	local formula = Vector2.new(0, totalScriptStatsLength + Separator.Size.Y.Offset + Directory.Size.Y.Offset + (numberOfPaddings * (UIListLayout.Padding.Offset)) - frame.Size.Y.Offset / 2)
+	local formula = Vector2.new(0, totalScriptStatsLength + Separator.Size.Y.Offset + Directory.Size.Y.Offset + (numberOfPaddings * (UIListLayout.Padding.Offset)) - (frame.Size.Y.Offset / 2) - UIPadding.PaddingTop.Offset)
 	return formula
 end
 
