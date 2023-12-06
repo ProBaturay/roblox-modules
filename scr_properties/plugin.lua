@@ -142,11 +142,6 @@ ScriptScrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
 ScriptScrollingFrame.ScrollBarThickness = 6
 ScriptScrollingFrame.Parent = MainMenu
 
-local UIStroke1 = Instance.new("UIStroke")
-UIStroke1.Thickness = 2
-UIStroke1.Color = Color3.fromRGB(10, 10, 10)
-UIStroke1.Parent = ScriptScrollingFrame
-
 local UIListLayout = Instance.new("UIListLayout")
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 UIListLayout.Padding = UDim.new(0, 10)
@@ -166,20 +161,20 @@ Directory.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Directory.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
 Directory.Parent = ScriptScrollingFrame
 
-local FullName = Instance.new("TextLabel")
-FullName.Name = "FullName"
-FullName.Size = UDim2.new(0.9, -100, 1, 0)
-FullName.BorderColor3 = Color3.fromRGB(0, 0, 0)
-FullName.BackgroundTransparency = 1
-FullName.Position = UDim2.new(0, 8, 0, 0)
-FullName.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-FullName.TextTruncate = Enum.TextTruncate.AtEnd
-FullName.TextSize = 14
-FullName.TextColor3 = Color3.fromRGB(163, 162, 165)
-FullName.Text = "Directory"
-FullName.Font = Enum.Font.Gotham
-FullName.TextXAlignment = Enum.TextXAlignment.Left
-FullName.Parent = Directory
+local Indicator = Instance.new("TextLabel")
+Indicator.Name = "Indicator"
+Indicator.Size = UDim2.new(0.9, -100, 1, 0)
+Indicator.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Indicator.BackgroundTransparency = 1
+Indicator.Position = UDim2.new(0, 8, 0, 0)
+Indicator.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Indicator.TextTruncate = Enum.TextTruncate.AtEnd
+Indicator.TextSize = 14
+Indicator.TextColor3 = Color3.fromRGB(163, 162, 165)
+Indicator.Text = "Indicator"
+Indicator.Font = Enum.Font.Gotham
+Indicator.TextXAlignment = Enum.TextXAlignment.Left
+Indicator.Parent = Directory
 
 local Characters = Instance.new("TextLabel")
 Characters.Name = "Characters"
@@ -614,7 +609,7 @@ SettingsScrollingFrame.Parent = SettingsMenu
 
 local PluginSettings = Instance.new("TextLabel")
 PluginSettings.Name = "PluginSettings"
-PluginSettings.LayoutOrder = 7
+PluginSettings.LayoutOrder = 11
 PluginSettings.ZIndex = 3
 PluginSettings.AnchorPoint = Vector2.new(0, 0.5)
 PluginSettings.Size = UDim2.new(1, 0, 0, 40)
@@ -633,7 +628,7 @@ PluginSettings.Parent = SettingsScrollingFrame
 
 local Separator2 = Instance.new("Frame")
 Separator2.Name = "Separator2"
-Separator2.LayoutOrder = 8
+Separator2.LayoutOrder = 12
 Separator2.Size = UDim2.new(1, 0, 0, 2)
 Separator2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Separator2.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -641,7 +636,7 @@ Separator2.Parent = SettingsScrollingFrame
 
 local Separator3 = Instance.new("Frame")
 Separator3.Name = "Separator3"
-Separator3.LayoutOrder = 10
+Separator3.LayoutOrder = 8
 Separator3.Size = UDim2.new(1, 0, 0, 2)
 Separator3.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Separator3.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -649,7 +644,7 @@ Separator3.Parent = SettingsScrollingFrame
 
 local ListSettings = Instance.new("TextLabel")
 ListSettings.Name = "ListSettings"
-ListSettings.LayoutOrder = 9
+ListSettings.LayoutOrder = 7
 ListSettings.ZIndex = 3
 ListSettings.AnchorPoint = Vector2.new(0, 0.5)
 ListSettings.Size = UDim2.new(1, 0, 0, 40)
@@ -779,9 +774,6 @@ Frame5.BackgroundTransparency = 1
 Frame5.BackgroundColor3 = Color3.fromRGB(157, 157, 157)
 Frame5.Parent = ToggleScriptVisibility
 
-local UIAspectRatioConstraint1 = Instance.new("UIAspectRatioConstraint")
-UIAspectRatioConstraint1.Parent = Frame5
-
 local ToggleScriptVisibilityButton = Instance.new("TextButton")
 ToggleScriptVisibilityButton.Name = "ToggleScriptVisibilityButton"
 ToggleScriptVisibilityButton.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -832,9 +824,6 @@ Frame6.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Frame6.BackgroundTransparency = 1
 Frame6.BackgroundColor3 = Color3.fromRGB(157, 157, 157)
 Frame6.Parent = IncludeWhitespace
-
-local UIAspectRatioConstraint2 = Instance.new("UIAspectRatioConstraint")
-UIAspectRatioConstraint2.Parent = Frame6
 
 local WhitespaceButton = Instance.new("TextButton")
 WhitespaceButton.Name = "WhitespaceButton"
@@ -923,7 +912,7 @@ TextLabel3.Parent = ColorEffects
 
 local Theme = Instance.new("Frame")
 Theme.Name = "Theme"
-Theme.LayoutOrder = 8
+Theme.LayoutOrder = 13
 Theme.Size = UDim2.new(1, 0, 0, 30)
 Theme.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Theme.BackgroundTransparency = 1
@@ -976,7 +965,7 @@ TextLabel4.Parent = Theme
 
 local Order = Instance.new("Frame")
 Order.Name = "Order"
-Order.LayoutOrder = 11
+Order.LayoutOrder = 9
 Order.Size = UDim2.new(1, 0, 0, 30)
 Order.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Order.BackgroundTransparency = 1
@@ -1008,9 +997,74 @@ OrderButton.Text = "Random"
 OrderButton.Font = Enum.Font.Gotham
 OrderButton.Parent = Frame9
 
-local UICornerOrderButton = Instance.new("UICorner")
-UICornerOrderButton.CornerRadius = UDim.new(0, 8)
-UICornerOrderButton.Parent = OrderButton
+-------
+
+local IndicatorFrame = Instance.new("Frame")
+IndicatorFrame.Name = "Indicator"
+IndicatorFrame.LayoutOrder = 10
+IndicatorFrame.Size = UDim2.new(1, 0, 0, 30)
+IndicatorFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+IndicatorFrame.BackgroundTransparency = 1
+IndicatorFrame.BorderSizePixel = 0
+IndicatorFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+IndicatorFrame.Parent = SettingsScrollingFrame
+
+local IndicatorSubFrame = Instance.new("Frame")
+IndicatorSubFrame.Size = UDim2.new(1, 0, 1, 0)
+IndicatorSubFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+IndicatorSubFrame.BackgroundTransparency = 1
+IndicatorSubFrame.BorderSizePixel = 0
+IndicatorSubFrame.BackgroundColor3 = Color3.fromRGB(157, 157, 157)
+IndicatorSubFrame.Parent = IndicatorFrame
+
+local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
+UIAspectRatioConstraint.AspectRatio = 3
+UIAspectRatioConstraint.Parent = IndicatorSubFrame
+
+local IndicatorButton = Instance.new("TextButton")
+IndicatorButton.Name = "IndicatorButton"
+IndicatorButton.AnchorPoint = Vector2.new(0.5, 0.5)
+IndicatorButton.Size = UDim2.new(1, 0, 1, 0)
+IndicatorButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+IndicatorButton.Position = UDim2.new(0.5, 0, 0.5, 0)
+IndicatorButton.BorderSizePixel = 0
+IndicatorButton.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
+IndicatorButton.FontSize = Enum.FontSize.Size14
+IndicatorButton.TextSize = 14
+IndicatorButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+IndicatorButton.Text = "Name"
+IndicatorButton.Font = Enum.Font.Gotham
+IndicatorButton.Parent = IndicatorSubFrame
+
+local UICorner = Instance.new("UICorner")
+UICorner.Parent = IndicatorButton
+
+local UICorner1 = Instance.new("UICorner")
+UICorner1.Parent = IndicatorSubFrame
+
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Thickness = 2
+UIStroke.Color = Color3.fromRGB(10, 10, 10)
+UIStroke.Parent = IndicatorSubFrame
+
+local IndicatorTextLabel = Instance.new("TextLabel")
+IndicatorTextLabel.AnchorPoint = Vector2.new(0, 0.5)
+IndicatorTextLabel.Size = UDim2.new(1, -100, 1, 0)
+IndicatorTextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+IndicatorTextLabel.BackgroundTransparency = 1
+IndicatorTextLabel.Position = UDim2.new(0, 96, 0.5, 0)
+IndicatorTextLabel.BorderSizePixel = 0
+IndicatorTextLabel.FontSize = Enum.FontSize.Size14
+IndicatorTextLabel.TextSize = 14
+IndicatorTextLabel.TextColor3 = Color3.fromRGB(188, 188, 188)
+IndicatorTextLabel.Text = "Indicator"
+IndicatorTextLabel.TextWrapped = true
+IndicatorTextLabel.TextWrap = true
+IndicatorTextLabel.Font = Enum.Font.Gotham
+IndicatorTextLabel.TextXAlignment = Enum.TextXAlignment.Left
+IndicatorTextLabel.Parent = IndicatorFrame
+
+-----------
 
 local TextLabel5 = Instance.new("TextLabel")
 TextLabel5.AnchorPoint = Vector2.new(0, 0.5)
@@ -1043,11 +1097,6 @@ ColorEditorSub.BorderColor3 = Color3.fromRGB(0, 0, 0)
 ColorEditorSub.BackgroundTransparency = 1
 ColorEditorSub.BackgroundColor3 = Color3.fromRGB(157, 157, 157)
 ColorEditorSub.Parent = ColorEditor
-
-local UIAspectRatioConstraint6 = Instance.new("UIAspectRatioConstraint")
-UIAspectRatioConstraint6.AspectRatio = 1.71
-UIAspectRatioConstraint6.DominantAxis = Enum.DominantAxis.Height
-UIAspectRatioConstraint6.Parent = ColorEditorSub
 
 local ChangeFrame = Instance.new("Frame")
 ChangeFrame.Name = "1"
@@ -1133,15 +1182,6 @@ SelectedTextBox.Text = "15, 178, 227"
 SelectedTextBox.Font = Enum.Font.Gotham
 SelectedTextBox.Parent = SelectedFrame
 
-local UIStroke19 = Instance.new("UIStroke")
-UIStroke19.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-UIStroke19.Thickness = 2
-UIStroke19.Color = Color3.fromRGB(10, 10, 10)
-UIStroke19.Parent = SelectedTextBox
-
-local UICorner18 = Instance.new("UICorner")
-UICorner18.Parent = SelectedTextBox
-
 local OpenScriptFrame = Instance.new("Frame")
 OpenScriptFrame.Name = "3"
 OpenScriptFrame.LayoutOrder = 3
@@ -1207,14 +1247,6 @@ IncreaseFrame.Size = UDim2.new(0, 24, 0, 24)
 IncreaseFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 IncreaseFrame.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 IncreaseFrame.Parent = ColorEditorSub
-
-local UICorner21 = Instance.new("UICorner")
-UICorner21.Parent = IncreaseFrame
-
-local UIStroke22 = Instance.new("UIStroke")
-UIStroke22.Thickness = 2
-UIStroke22.Color = Color3.fromRGB(10, 10, 10)
-UIStroke22.Parent = IncreaseFrame
 
 local TextLabel9 = Instance.new("TextLabel")
 TextLabel9.AnchorPoint = Vector2.new(0, 0.5)
@@ -1436,7 +1468,23 @@ local FactorValue = Instance.new("StringValue")
 FactorValue.Name = "Factor"
 FactorValue.Parent = List
 
+local IndicatorValue = Instance.new("StringValue")
+IndicatorValue.Name = "Indicator"
+IndicatorValue.Parent = List
+
 do --obviate 200 local limit
+	local UICorner21 = Instance.new("UICorner")
+	UICorner21.Parent = IncreaseFrame
+
+	local UIStroke22 = Instance.new("UIStroke")
+	UIStroke22.Thickness = 2
+	UIStroke22.Color = Color3.fromRGB(10, 10, 10)
+	UIStroke22.Parent = IncreaseFrame
+
+	local UICornerOrderButton = Instance.new("UICorner")
+	UICornerOrderButton.CornerRadius = UDim.new(0, 8)
+	UICornerOrderButton.Parent = OrderButton
+
 	local UIStroke = Instance.new("UIStroke")
 	UIStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	UIStroke.Thickness = 2
@@ -1471,6 +1519,9 @@ do --obviate 200 local limit
 	local UIStroke5 = Instance.new("UIStroke")
 	UIStroke5.Color = Color3.fromRGB(10, 10, 10)
 	UIStroke5.Parent = Frame1
+	
+	local UIAspectRatioConstraint1 = Instance.new("UIAspectRatioConstraint")
+	UIAspectRatioConstraint1.Parent = Frame5
 
 	local UICorner4 = Instance.new("UICorner")
 	UICorner4.Parent = Frame1
@@ -1502,10 +1553,23 @@ do --obviate 200 local limit
 	UIStroke10.Color = Color3.fromRGB(10, 10, 10)
 	UIStroke10.Parent = Frame5
 
+	local UIAspectRatioConstraint2 = Instance.new("UIAspectRatioConstraint")
+	UIAspectRatioConstraint2.Parent = Frame6
+
+	local UIAspectRatioConstraint6 = Instance.new("UIAspectRatioConstraint")
+	UIAspectRatioConstraint6.AspectRatio = 1.71
+	UIAspectRatioConstraint6.DominantAxis = Enum.DominantAxis.Height
+	UIAspectRatioConstraint6.Parent = ColorEditorSub
+
 	local UICorner8 = Instance.new("UICorner")
 	UICorner8.CornerRadius = UDim.new(1, 0)
 	UICorner8.Parent = Frame5
 	
+	local UIStroke1 = Instance.new("UIStroke")
+	UIStroke1.Thickness = 2
+	UIStroke1.Color = Color3.fromRGB(10, 10, 10)
+	UIStroke1.Parent = ScriptScrollingFrame
+
 	local UIStroke11 = Instance.new("UIStroke")
 	UIStroke11.Thickness = 2
 	UIStroke11.Color = Color3.fromRGB(10, 10, 10)
@@ -1558,6 +1622,15 @@ do --obviate 200 local limit
 	UIStroke16.Thickness = 2
 	UIStroke16.Color = Color3.fromRGB(10, 10, 10)
 	UIStroke16.Parent = ChangeFrame
+	
+	local UIStroke19 = Instance.new("UIStroke")
+	UIStroke19.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	UIStroke19.Thickness = 2
+	UIStroke19.Color = Color3.fromRGB(10, 10, 10)
+	UIStroke19.Parent = SelectedTextBox
+
+	local UICorner18 = Instance.new("UICorner")
+	UICorner18.Parent = SelectedTextBox
 end
 
 do 
@@ -1698,6 +1771,10 @@ local themeColors = {
 local function retrievePossibleSettings()
 	return {
 		List = {
+			Indicator = {
+				[1] = "Name",
+				[2] = "Directory"
+			},
 			Factor = {
 				[1] = "Name",
 				[2] = "ClassName"
@@ -1736,7 +1813,8 @@ local function retrieveSettings()
 		},
 		List = {
 			Factor = FactorValue.Value,
-			Order = OrderValue.Value
+			Order = OrderValue.Value,
+			Indicator = IndicatorValue.Value
 		},
 		Plugin = {
 			Theme = ThemeValue.Value
@@ -1744,7 +1822,7 @@ local function retrieveSettings()
 	}
 end
 
-local settingsValues = {
+local settingsColorValues = {
 	[1] = ChangeValue,
 	[2] = SelectedValue,
 	[3] = DecreaseValue,
@@ -1752,7 +1830,7 @@ local settingsValues = {
 	[5] = OpenScriptValue
 }
 
-local settingsTextBoxes = {
+local settingsColorTextBoxes = {
 	[ChangeValue] = ChangeTextBox,
 	[SelectedValue] = SelectedTextBox,
 	[DecreaseValue] = DecreaseTextBox,
@@ -2030,6 +2108,16 @@ local function createCheckBoxAtPosition(newValue: boolean, button: TextButton)
 	newImage.Parent = button
 end
 
+local function forEachFrame(func)
+	for i, frame in ScriptScrollingFrame:GetChildren() do
+		if frame:IsA("Frame") and string.match(frame.Name, "ScriptStatsBase") then
+			coroutine.wrap(function()
+				func(frame)
+			end)()	
+		end
+	end
+end
+
 local function changeLayoutOrder(order: string?)
 	local function setInTheOrder(tab)
 		local initialOrder = 3
@@ -2123,6 +2211,13 @@ local function getNumberOfFrames(scrollingFrame: ScrollingFrame)
 	return total
 end
 
+local function getIndicatorText(scr: nLuaSourceContainer, hover: boolean)
+	local name = scr.Name
+	local directory = scr:GetFullName()
+	
+	return if hover then (if IndicatorValue.Value == "Name" then directory else name) else (if IndicatorValue.Value == "Directory" then directory else name)
+end
+
 local function insert(scr: nLuaSourceContainer)
 	if isScriptEligible(scr) and not table_find(inScriptGUIDs, scr) then
 		local hovered = false
@@ -2138,7 +2233,7 @@ local function insert(scr: nLuaSourceContainer)
 		local tab = {
 			["Lines"] = newFrame.Lines,
 			["Characters"] = newFrame.Characters,
-			["FullName"] = newFrame.FullName
+			["Indicator"] = newFrame.Indicator
 		}
 
 		local function setStrokeState(boolean: boolean)
@@ -2193,7 +2288,7 @@ local function insert(scr: nLuaSourceContainer)
 		newFrame.InputChanged:Connect(function(input: InputObject)
 			if input.UserInputType == Enum.UserInputType.MouseMovement then
 				hovered = false
-				tab["FullName"].Text = scr:GetFullName()
+				tab["Indicator"].Text = getIndicatorText(scr, true)
 			end
 
 			setStrokeState(true)
@@ -2202,7 +2297,7 @@ local function insert(scr: nLuaSourceContainer)
 		newFrame.MouseLeave:Connect(function()
 			hovered = true
 			setStrokeState(false)
-			tab["FullName"].Text = scr.Name
+			tab["Indicator"].Text = getIndicatorText(scr, false)
 		end)
 		
 		newFrame.InputEnded:Connect(function(input: InputObject)
@@ -2236,7 +2331,7 @@ local function insert(scr: nLuaSourceContainer)
 				tab["Characters"].Text = tostring(len)
 			end
 			
-			tab["FullName"].Text = scr.Name
+			tab["Indicator"].Text = if IndicatorValue.Value == "Name" then scr.Name else scr:GetFullName()
 
 			coroutine.wrap(function()
 				adjustScriptStats()
@@ -2266,7 +2361,7 @@ local function insert(scr: nLuaSourceContainer)
 		end)
 		
 		scr:GetPropertyChangedSignal("Name"):Connect(function()
-			tab["FullName"].Text = scr.Name
+			tab["Indicator"].Text = scr.Name
 		end)
 		
 		local function changeBackground()
@@ -2289,7 +2384,7 @@ local function insert(scr: nLuaSourceContainer)
 		
 		CreateColorEffectsValue.Changed:Connect(changeBackground)
 		
-		for i, value in settingsValues do
+		for i, value in settingsColorValues do
 			value.Changed:Connect(changeBackground)
 		end
 		
@@ -2446,6 +2541,21 @@ ThemeButton.Activated:Connect(function()
 	refreshCheckboxes()
 end)
 
+IndicatorButton.Activated:Connect(function()
+	local value = IndicatorValue.Value
+	local stngs = retrievePossibleSettings().List.Indicator
+
+	local newValue = table_nextone(stngs, table.find(stngs, value))
+	IndicatorButton.Text = newValue
+	IndicatorValue.Value = newValue
+
+	forEachFrame(function(frame)
+		local indicator = frame.Indicator
+		local object = frame.ScriptAttached.Value
+		indicator.Text = getIndicatorText(object, false)
+	end)
+end)
+
 FactorButton.Activated:Connect(function()
 	return -- next
 end)
@@ -2461,7 +2571,7 @@ end)
 
 game.DescendantAdded:Connect(insert)
 
-for value, textBox in settingsTextBoxes do
+for value, textBox in settingsColorTextBoxes do
 	local last = ""
 	local debounce = false
 
@@ -2479,7 +2589,7 @@ for value, textBox in settingsTextBoxes do
 		local text = textBox.Text
 		local parsed = parseTextBox(textBox)
 		
-		local num = table.find(settingsValues, value)
+		local num = table.find(settingsColorValues, value)
 		
 		if parsed then
 			constants[num] = parsed
@@ -2489,7 +2599,7 @@ for value, textBox in settingsTextBoxes do
 			textBox.Text = RGBToString(constants[num])
 		end
 		
-		for value, TextBox in settingsTextBoxes do
+		for value, TextBox in settingsColorTextBoxes do
 			value.Value = parseTextBox(TextBox)
 		end
 		
@@ -2505,6 +2615,7 @@ if not widget:GetAttribute("Setup") then
 	CreateColorEffectsValue.Value = true
 	OrderValue.Value = "Random"
 	FactorValue.Value = "Name"
+	IndicatorValue.Value = "Name"
 end
 
 --| To be released
