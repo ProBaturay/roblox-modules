@@ -1,13 +1,21 @@
 --21:37 UTC+3 24/07/2023
---Last update: 17:13 UTC+3 11/11/2023
+--Last update: 04:07 UTC+3 18/06/2024
 --!nonstrict
---!native
+--Inative
 
 type nLuaSourceContainer = LuaSourceContainer & {Source: any}
 type nValueBase = ValueBase & {Value: any}
 
 local pluginName = "Script Properties"
 local testActive = false -- Used for local plugin testing
+local minWidth, minHeight = 340, 334
+local IS_DOWN_MIN_WIDTH = false
+local miniWidth, miniHeight = 218, 137
+
+local reminderCycle = {
+	[1] = "Expand the interface to see the full content.",
+	[2] = "Minimize the interface to see the stats."
+}
 
 local RunService = game:GetService("RunService")
 local Selection = game:GetService("Selection")
@@ -32,8 +40,8 @@ local dockWidgetInfo = DockWidgetPluginGuiInfo.new(
 	false,
 	340,
 	600,
-	340,
-	334
+	minWidth,
+	minHeight
 )
 
 local toolbar = plugin:CreateToolbar("Script Properties")
@@ -152,6 +160,7 @@ Directory.Name = "Directory"
 Directory.Size = UDim2.new(1, -16, 0, 25)
 Directory.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Directory.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
+Directory.ClipsDescendants = true
 Directory.Parent = ScriptScrollingFrame
 
 local Indicator = Instance.new("TextLabel")
@@ -614,41 +623,6 @@ Separator3.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Separator3.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 Separator3.Parent = SettingsScrollingFrame
 
-local ListSettings = Instance.new("TextLabel")
-ListSettings.Name = "ListSettings"
-ListSettings.LayoutOrder = 8
-ListSettings.ZIndex = 3
-ListSettings.AnchorPoint = Vector2.new(0, 0.5)
-ListSettings.Size = UDim2.new(1, 0, 0, 40)
-ListSettings.BackgroundTransparency = 1
-ListSettings.Position = UDim2.new(0, 0, 0, 10)
-ListSettings.TextTruncate = Enum.TextTruncate.AtEnd
-ListSettings.TextSize = 14
-ListSettings.TextColor3 = Color3.fromRGB(188, 188, 188)
-ListSettings.TextYAlignment = Enum.TextYAlignment.Bottom
-ListSettings.Text = "Script list"
-ListSettings.TextWrapped = true
-ListSettings.Font = Enum.Font.Gotham
-ListSettings.TextXAlignment = Enum.TextXAlignment.Left
-ListSettings.Parent = SettingsScrollingFrame
-
-local WhileScriptingSettings = Instance.new("TextLabel")
-WhileScriptingSettings.Name = "WhileScriptingSettings"
-WhileScriptingSettings.LayoutOrder = 1
-WhileScriptingSettings.ZIndex = 3
-WhileScriptingSettings.AnchorPoint = Vector2.new(0, 0.5)
-WhileScriptingSettings.Size = UDim2.new(1, 0, 0, 20)
-WhileScriptingSettings.BackgroundTransparency = 1
-WhileScriptingSettings.Position = UDim2.new(0, 0, 0, 10)
-WhileScriptingSettings.TextTruncate = Enum.TextTruncate.AtEnd
-WhileScriptingSettings.TextSize = 14
-WhileScriptingSettings.TextColor3 = Color3.fromRGB(188, 188, 188)
-WhileScriptingSettings.Text = "While scripting"
-WhileScriptingSettings.TextWrapped = true
-WhileScriptingSettings.Font = Enum.Font.Gotham
-WhileScriptingSettings.TextXAlignment = Enum.TextXAlignment.Left
-WhileScriptingSettings.Parent = SettingsScrollingFrame
-
 local Separator1 = Instance.new("Frame")
 Separator1.Name = "Separator1"
 Separator1.LayoutOrder = 2
@@ -687,38 +661,6 @@ FactorButton.Text = "Name"
 FactorButton.Font = Enum.Font.Gotham
 FactorButton.Parent = Frame4
 
-local TextLabel = Instance.new("TextLabel")
-TextLabel.AnchorPoint = Vector2.new(0, 0.5)
-TextLabel.Size = UDim2.new(1, -100, 1, 0)
-TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextLabel.Position = UDim2.new(0, 96, 0.5, 0)
-TextLabel.BackgroundTransparency = 1
-TextLabel.TextSize = 14
-TextLabel.TextColor3 = Color3.fromRGB(188, 188, 188)
-TextLabel.Text = "Factor"
-TextLabel.TextWrapped = true
-TextLabel.Font = Enum.Font.Gotham
-TextLabel.TextXAlignment = Enum.TextXAlignment.Left
-TextLabel.Parent = Factor
-
-local UIListLayout1 = Instance.new("UIListLayout")
-UIListLayout1.HorizontalAlignment = Enum.HorizontalAlignment.Center
-UIListLayout1.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout1.Padding = UDim.new(0, 6)
-UIListLayout1.Parent = SettingsScrollingFrame
-
-local UIPadding1 = Instance.new("UIPadding")
-UIPadding1.PaddingTop = UDim.new(0, 10)
-UIPadding1.PaddingBottom = UDim.new(0, 10)
-UIPadding1.PaddingLeft = UDim.new(0, 10)
-UIPadding1.PaddingRight = UDim.new(0, 10)
-UIPadding1.Parent = SettingsScrollingFrame
-
-local UIStroke9 = Instance.new("UIStroke")
-UIStroke9.Thickness = 2
-UIStroke9.Color = Color3.fromRGB(10, 10, 10)
-UIStroke9.Parent = SettingsScrollingFrame
-
 local ToggleScriptVisibility = Instance.new("Frame")
 ToggleScriptVisibility.Name = "ToggleScriptVisibility"
 ToggleScriptVisibility.LayoutOrder = 4
@@ -749,21 +691,6 @@ ToggleScriptVisibilityButton.Text = ""
 ToggleScriptVisibilityButton.Font = Enum.Font.Gotham
 ToggleScriptVisibilityButton:SetAttribute("ExcludeAutoButtonColorRule", true)
 ToggleScriptVisibilityButton.Parent = Frame5
-
-local TextLabel1 = Instance.new("TextLabel")
-TextLabel1.AnchorPoint = Vector2.new(0, 0.5)
-TextLabel1.Size = UDim2.new(1, -40, 1, 0)
-TextLabel1.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextLabel1.Position = UDim2.new(0, 28, 0.5, 0)
-TextLabel1.BackgroundTransparency = 1
-TextLabel1.TextSize = 14
-TextLabel1.TextColor3 = Color3.fromRGB(188, 188, 188)
-TextLabel1.Text = "Toggle script visibility by clicking on the list"
-TextLabel1.TextTruncate = Enum.TextTruncate.AtEnd
-TextLabel1.TextWrapped = true
-TextLabel1.Font = Enum.Font.Gotham
-TextLabel1.TextXAlignment = Enum.TextXAlignment.Left
-TextLabel1.Parent = ToggleScriptVisibility
 
 local IncludeWhitespace = Instance.new("Frame")
 IncludeWhitespace.Name = "IncludeWhitespace"
@@ -796,19 +723,6 @@ WhitespaceButton.Font = Enum.Font.Gotham
 WhitespaceButton.Parent = Frame6
 WhitespaceButton:SetAttribute("ExcludeAutoButtonColorRule", true)
 
-local TextLabel2 = Instance.new("TextLabel")
-TextLabel2.AnchorPoint = Vector2.new(0, 0.5)
-TextLabel2.Size = UDim2.new(1, -40, 1, 0)
-TextLabel2.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextLabel2.Position = UDim2.new(0, 28, 0.5, 0)
-TextLabel2.BackgroundTransparency = 1
-TextLabel2.TextSize = 14
-TextLabel2.TextColor3 = Color3.fromRGB(188, 188, 188)
-TextLabel2.Text = "Include whitespace characters"
-TextLabel2.Font = Enum.Font.Gotham
-TextLabel2.TextXAlignment = Enum.TextXAlignment.Left
-TextLabel2.Parent = IncludeWhitespace
-
 local ColorEffects = Instance.new("Frame")
 ColorEffects.Name = "ColorEffects"
 ColorEffects.LayoutOrder = 5
@@ -840,20 +754,6 @@ ColorEffectsButton.Font = Enum.Font.Gotham
 ColorEffectsButton:SetAttribute("ExcludeAutoButtonColorRule", true)
 ColorEffectsButton.Parent = Frame7
 
-local TextLabel3 = Instance.new("TextLabel")
-TextLabel3.AnchorPoint = Vector2.new(0, 0.5)
-TextLabel3.Size = UDim2.new(1, -40, 1, 0)
-TextLabel3.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextLabel3.Position = UDim2.new(0, 28, 0.5, 0)
-TextLabel3.BackgroundTransparency = 1
-TextLabel3.TextSize = 14
-TextLabel3.TextColor3 = Color3.fromRGB(188, 188, 188)
-TextLabel3.Text = "Create color effects"
-TextLabel3.TextWrapped = true
-TextLabel3.Font = Enum.Font.Gotham
-TextLabel3.TextXAlignment = Enum.TextXAlignment.Left
-TextLabel3.Parent = ColorEffects
-
 local Theme = Instance.new("Frame")
 Theme.Name = "Theme"
 Theme.LayoutOrder = 14
@@ -870,10 +770,6 @@ Frame8.BackgroundTransparency = 1
 Frame8.BackgroundColor3 = Color3.fromRGB(157, 157, 157)
 Frame8.Parent = Theme
 
-local UIAspectRatioConstraint4 = Instance.new("UIAspectRatioConstraint")
-UIAspectRatioConstraint4.AspectRatio = 3
-UIAspectRatioConstraint4.Parent = Frame8
-
 local ThemeButton = Instance.new("TextButton")
 ThemeButton.Name = "ThemeButton"
 ThemeButton.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -888,19 +784,39 @@ ThemeButton.Text = ""
 ThemeButton.Font = Enum.Font.Gotham
 ThemeButton.Parent = Frame8
 
-local TextLabel4 = Instance.new("TextLabel")
-TextLabel4.AnchorPoint = Vector2.new(0, 0.5)
-TextLabel4.Size = UDim2.new(1, -100, 1, 0)
-TextLabel4.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextLabel4.Position = UDim2.new(0, 96, 0.5, 0)
-TextLabel4.BackgroundTransparency = 1
-TextLabel4.TextSize = 14
-TextLabel4.TextColor3 = Color3.fromRGB(188, 188, 188)
-TextLabel4.Text = "Theme"
-TextLabel4.TextWrapped = true
-TextLabel4.Font = Enum.Font.Gotham
-TextLabel4.TextXAlignment = Enum.TextXAlignment.Left
-TextLabel4.Parent = Theme
+---
+
+local Warnings = Instance.new("Frame")
+Warnings.Name = "Warnings"
+Warnings.LayoutOrder = 15
+Warnings.Size = UDim2.new(1, 0, 0, 30)
+Warnings.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Warnings.BackgroundTransparency = 1
+Warnings.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Warnings.Parent = SettingsScrollingFrame
+
+local warningsFrame = Instance.new("Frame")
+warningsFrame.Size = UDim2.new(1, 0, 1, 0)
+warningsFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+warningsFrame.BackgroundTransparency = 1
+warningsFrame.BackgroundColor3 = Color3.fromRGB(157, 157, 157)
+warningsFrame.Parent = Warnings
+
+local WarningsButton = Instance.new("TextButton")
+WarningsButton.Name = "WarningsButton"
+WarningsButton.AnchorPoint = Vector2.new(0.5, 0.5)
+WarningsButton.Size = UDim2.new(1, 0, 1, 0)
+WarningsButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+WarningsButton.BackgroundTransparency = 0
+WarningsButton.Position = UDim2.new(0.5, 0, 0.5, 0)
+WarningsButton.BackgroundColor3 = Color3.fromRGB(46, 46, 46)
+WarningsButton.TextSize = 14
+WarningsButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+WarningsButton.Text = "Enabled"
+WarningsButton.Font = Enum.Font.Gotham
+WarningsButton.Parent = warningsFrame
+
+---
 
 local Order = Instance.new("Frame")
 Order.Name = "Order"
@@ -952,10 +868,6 @@ IndicatorSubFrame.BorderSizePixel = 0
 IndicatorSubFrame.BackgroundColor3 = Color3.fromRGB(157, 157, 157)
 IndicatorSubFrame.Parent = IndicatorFrame
 
-local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
-UIAspectRatioConstraint.AspectRatio = 3
-UIAspectRatioConstraint.Parent = IndicatorSubFrame
-
 local IndicatorButton = Instance.new("TextButton")
 IndicatorButton.Name = "IndicatorButton"
 IndicatorButton.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -987,20 +899,6 @@ IndicatorTextLabel.Parent = IndicatorFrame
 
 -----------
 
-local TextLabel5 = Instance.new("TextLabel")
-TextLabel5.AnchorPoint = Vector2.new(0, 0.5)
-TextLabel5.Size = UDim2.new(1, -160, 1, 0)
-TextLabel5.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextLabel5.Position = UDim2.new(0, 156, 0.5, 0)
-TextLabel5.BackgroundTransparency = 1
-TextLabel5.TextSize = 14
-TextLabel5.TextColor3 = Color3.fromRGB(188, 188, 188)
-TextLabel5.Text = "Order"
-TextLabel5.TextWrapped = true
-TextLabel5.Font = Enum.Font.Gotham
-TextLabel5.TextXAlignment = Enum.TextXAlignment.Left
-TextLabel5.Parent = Order
-
 local ColorEditor = Instance.new("Frame")
 ColorEditor.Name = "ColorEditor"
 ColorEditor.LayoutOrder = 6
@@ -1026,20 +924,6 @@ HoverFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 HoverFrame.BackgroundColor3 = Color3.fromRGB(15, 178, 227)
 HoverFrame.Parent = ColorEditorSub
 
-local TextLabel6 = Instance.new("TextLabel")
-TextLabel6.AnchorPoint = Vector2.new(0, 0.5)
-TextLabel6.Size = UDim2.new(0, 120, 1, 0)
-TextLabel6.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextLabel6.Position = UDim2.new(0, 135, 0.5, 0)
-TextLabel6.BackgroundTransparency = 1
-TextLabel6.TextSize = 14
-TextLabel6.TextColor3 = Color3.fromRGB(188, 188, 188)
-TextLabel6.Text = "Hover"
-TextLabel6.TextWrapped = true
-TextLabel6.Font = Enum.Font.Gotham
-TextLabel6.TextXAlignment = Enum.TextXAlignment.Left
-TextLabel6.Parent = HoverFrame
-
 local HoverTextBox = Instance.new("TextBox")
 HoverTextBox.AnchorPoint = Vector2.new(0, 0.5)
 HoverTextBox.Size = UDim2.new(4, 0, 1, 0)
@@ -1053,18 +937,6 @@ HoverTextBox.Text = "15, 178, 227"
 HoverTextBox.Font = Enum.Font.Gotham
 HoverTextBox.Parent = HoverFrame
 
-local UIListLayout2 = Instance.new("UIListLayout")
-UIListLayout2.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout2.Padding = UDim.new(0, 6)
-UIListLayout2.Parent = ColorEditorSub
-
-local UIPadding2 = Instance.new("UIPadding")
-UIPadding2.PaddingTop = UDim.new(0, 6)
-UIPadding2.PaddingBottom = UDim.new(0, 6)
-UIPadding2.PaddingLeft = UDim.new(0, 6)
-UIPadding2.PaddingRight = UDim.new(0, 6)
-UIPadding2.Parent = ColorEditorSub
-
 local SelectedFrame = Instance.new("Frame")
 SelectedFrame.Name = "2"
 SelectedFrame.LayoutOrder = 2
@@ -1072,20 +944,6 @@ SelectedFrame.Size = UDim2.new(0, 24, 0, 24)
 SelectedFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 SelectedFrame.BackgroundColor3 = Color3.fromRGB(15, 178, 227)
 SelectedFrame.Parent = ColorEditorSub
-
-local TextLabel7 = Instance.new("TextLabel")
-TextLabel7.AnchorPoint = Vector2.new(0, 0.5)
-TextLabel7.Size = UDim2.new(0, 120, 1, 0)
-TextLabel7.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextLabel7.Position = UDim2.new(0, 135, 0.5, 0)
-TextLabel7.BackgroundTransparency = 1
-TextLabel7.TextSize = 14
-TextLabel7.TextColor3 = Color3.fromRGB(188, 188, 188)
-TextLabel7.Text = "Selected"
-TextLabel7.TextWrapped = true
-TextLabel7.Font = Enum.Font.Gotham
-TextLabel7.TextXAlignment = Enum.TextXAlignment.Left
-TextLabel7.Parent = SelectedFrame
 
 local SelectedTextBox = Instance.new("TextBox")
 SelectedTextBox.AnchorPoint = Vector2.new(0, 0.5)
@@ -1108,25 +966,6 @@ OpenScriptFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 OpenScriptFrame.BackgroundColor3 = Color3.fromRGB(142, 114, 255)
 OpenScriptFrame.Parent = ColorEditorSub
 
-local UIStroke20 = Instance.new("UIStroke")
-UIStroke20.Thickness = 2
-UIStroke20.Color = Color3.fromRGB(10, 10, 10)
-UIStroke20.Parent = OpenScriptFrame
-
-local TextLabel8 = Instance.new("TextLabel")
-TextLabel8.AnchorPoint = Vector2.new(0, 0.5)
-TextLabel8.Size = UDim2.new(0, 120, 1, 0)
-TextLabel8.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextLabel8.Position = UDim2.new(0, 135, 0.5, 0)
-TextLabel8.BackgroundTransparency = 1
-TextLabel8.TextSize = 14
-TextLabel8.TextColor3 = Color3.fromRGB(188, 188, 188)
-TextLabel8.Text = "Open script"
-TextLabel8.TextWrapped = true
-TextLabel8.Font = Enum.Font.Gotham
-TextLabel8.TextXAlignment = Enum.TextXAlignment.Left
-TextLabel8.Parent = OpenScriptFrame
-
 local OpenScriptTextBox = Instance.new("TextBox")
 OpenScriptTextBox.AnchorPoint = Vector2.new(0, 0.5)
 OpenScriptTextBox.Size = UDim2.new(4, 0, 1, 0)
@@ -1140,11 +979,6 @@ OpenScriptTextBox.Text = "142, 114, 255"
 OpenScriptTextBox.Font = Enum.Font.Gotham
 OpenScriptTextBox.Parent = OpenScriptFrame
 
-local UISizeConstraint = Instance.new("UISizeConstraint")
-UISizeConstraint.MinSize = Vector2.new(156, 156)
-UISizeConstraint.MaxSize = Vector2.new(math.huge, 156)
-UISizeConstraint.Parent = ColorEditorSub
-
 local IncreaseFrame = Instance.new("Frame")
 IncreaseFrame.Name = "4"
 IncreaseFrame.LayoutOrder = 4
@@ -1152,20 +986,6 @@ IncreaseFrame.Size = UDim2.new(0, 24, 0, 24)
 IncreaseFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 IncreaseFrame.BackgroundColor3 = Color3.fromRGB(0, 255, 0)
 IncreaseFrame.Parent = ColorEditorSub
-
-local TextLabel9 = Instance.new("TextLabel")
-TextLabel9.AnchorPoint = Vector2.new(0, 0.5)
-TextLabel9.Size = UDim2.new(0, 120, 1, 0)
-TextLabel9.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextLabel9.Position = UDim2.new(0, 135, 0.5, 0)
-TextLabel9.BackgroundTransparency = 1
-TextLabel9.TextSize = 14
-TextLabel9.TextColor3 = Color3.fromRGB(188, 188, 188)
-TextLabel9.Text = "Increase"
-TextLabel9.TextWrapped = true
-TextLabel9.Font = Enum.Font.Gotham
-TextLabel9.TextXAlignment = Enum.TextXAlignment.Left
-TextLabel9.Parent = IncreaseFrame
 
 local IncreaseTextBox = Instance.new("TextBox")
 IncreaseTextBox.AnchorPoint = Vector2.new(0, 0.5)
@@ -1188,20 +1008,6 @@ DecreaseFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
 DecreaseFrame.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 DecreaseFrame.Parent = ColorEditorSub
 
-local TextLabel10 = Instance.new("TextLabel")
-TextLabel10.AnchorPoint = Vector2.new(0, 0.5)
-TextLabel10.Size = UDim2.new(0, 120, 1, 0)
-TextLabel10.BorderColor3 = Color3.fromRGB(0, 0, 0)
-TextLabel10.Position = UDim2.new(0, 135, 0.5, 0)
-TextLabel10.BackgroundTransparency = 1
-TextLabel10.TextSize = 14
-TextLabel10.TextColor3 = Color3.fromRGB(188, 188, 188)
-TextLabel10.Text = "Decrease"
-TextLabel10.TextWrapped = true
-TextLabel10.Font = Enum.Font.Gotham
-TextLabel10.TextXAlignment = Enum.TextXAlignment.Left
-TextLabel10.Parent = DecreaseFrame
-
 local DecreaseTextBox = Instance.new("TextBox")
 DecreaseTextBox.AnchorPoint = Vector2.new(0, 0.5)
 DecreaseTextBox.Size = UDim2.new(4, 0, 1, 0)
@@ -1214,24 +1020,6 @@ DecreaseTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 DecreaseTextBox.Text = "255, 0, 0"
 DecreaseTextBox.Font = Enum.Font.Gotham
 DecreaseTextBox.Parent = DecreaseFrame
-
-local ListSettings1 = Instance.new("TextLabel")
-ListSettings1.Name = "ListSettings"
-ListSettings1.LayoutOrder = 14
-ListSettings1.ZIndex = 3
-ListSettings1.AnchorPoint = Vector2.new(0, 0.5)
-ListSettings1.Size = UDim2.new(1, 0, 0, 40)
-ListSettings1.BackgroundTransparency = 1
-ListSettings1.Position = UDim2.new(0, 0, 0, 10)
-ListSettings1.TextTruncate = Enum.TextTruncate.AtEnd
-ListSettings1.TextSize = 14
-ListSettings1.RichText = true
-ListSettings1.TextColor3 = Color3.fromRGB(188, 188, 188)
-ListSettings1.TextYAlignment = Enum.TextYAlignment.Bottom
-ListSettings1.Text = "Any issues? Report them to <b>@ProBaturay</b> through DevForum, via Roblox."
-ListSettings1.TextWrapped = true
-ListSettings1.Font = Enum.Font.Gotham
-ListSettings1.Parent = SettingsScrollingFrame
 
 local ReturnToMainMenuButton = Instance.new("TextButton")
 ReturnToMainMenuButton.Name = "ReturnToMainMenuButton"
@@ -1323,6 +1111,22 @@ DefaultButton.Text = "Default colors"
 DefaultButton.Font = Enum.Font.Gotham
 DefaultButton.Parent = DefaultSubFrame
 
+local ReminderLabel = Instance.new("TextLabel")
+ReminderLabel.Name = "ReminderLabel"
+ReminderLabel.AnchorPoint = Vector2.new(0.5, 0)
+ReminderLabel.Size = UDim2.new(1, 0, 0, 60)
+ReminderLabel.BackgroundTransparency = 1
+ReminderLabel.Position = UDim2.new(0.5, 0, 1, -35)
+ReminderLabel.BorderSizePixel = 0
+ReminderLabel.FontSize = Enum.FontSize.Size12
+ReminderLabel.TextSize = 12
+ReminderLabel.TextColor3 = Color3.fromRGB(188, 188, 188)
+ReminderLabel.Text = "Expand the interface to see the full content."
+ReminderLabel.Font = Enum.Font.GothamBold
+ReminderLabel.TextWrapped = true
+ReminderLabel.TextTruncate = Enum.TextTruncate.AtEnd
+ReminderLabel.Parent = MainMenu
+
 local SettingsFolder = Instance.new("Folder")
 SettingsFolder.Name = "Settings"
 SettingsFolder.Parent = Whole
@@ -1350,6 +1154,10 @@ Plugin.Parent = SettingsFolder
 local ThemeValue = Instance.new("StringValue")
 ThemeValue.Name = "ThemeValue"
 ThemeValue.Parent = Plugin
+
+local WarningsValue = Instance.new("StringValue")
+WarningsValue.Name = "WarningsValue"
+WarningsValue.Parent = Plugin
 
 local Colors = Instance.new("Folder")
 Colors.Name = "Colors"
@@ -1390,6 +1198,90 @@ FactorValue.Parent = List
 local IndicatorValue = Instance.new("StringValue")
 IndicatorValue.Name = "IndicatorValue"
 IndicatorValue.Parent = List
+
+---
+
+
+local Mini = Instance.new("Frame")
+Mini.Name = "Mini"
+Mini.LayoutOrder = 32
+Mini.AnchorPoint = Vector2.new(0.5, 0)
+Mini.Size = UDim2.new(1, 0, 0, 60)
+Mini.ClipsDescendants = true
+Mini.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Mini.Position = UDim2.new(0.5, 0, 0, 0)
+Mini.BorderSizePixel = 0
+Mini.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
+Mini.Parent = BackgroundSafe
+
+local MiniLinesText = Instance.new("TextLabel")
+MiniLinesText.Name = "LinesText"
+MiniLinesText.Size = UDim2.new(0, 30, 0, 15)
+MiniLinesText.BackgroundTransparency = 1
+MiniLinesText.Position = UDim2.new(0, 10, 0, 8)
+MiniLinesText.BorderSizePixel = 0
+MiniLinesText.FontSize = Enum.FontSize.Size12
+MiniLinesText.TextSize = 12
+MiniLinesText.RichText = true
+MiniLinesText.TextColor3 = Color3.fromRGB(188, 188, 188)
+MiniLinesText.Text = "L:"
+MiniLinesText.TextWrapped = true
+MiniLinesText.Font = Enum.Font.Gotham
+MiniLinesText.TextXAlignment = Enum.TextXAlignment.Left
+MiniLinesText.Parent = Mini
+
+local MiniCharactersText = Instance.new("TextLabel")
+MiniCharactersText.Name = "CharactersText"
+MiniCharactersText.Size = UDim2.new(0, 30, 0, 15)
+MiniCharactersText.BackgroundTransparency = 1
+MiniCharactersText.Position = UDim2.new(0, 10, 0, 40)
+MiniCharactersText.BorderSizePixel = 0
+MiniCharactersText.FontSize = Enum.FontSize.Size12
+MiniCharactersText.TextSize = 12
+MiniCharactersText.RichText = true
+MiniCharactersText.TextColor3 = Color3.fromRGB(188, 188, 188)
+MiniCharactersText.Text = "C:"
+MiniCharactersText.TextWrapped = true
+MiniCharactersText.Font = Enum.Font.Gotham
+MiniCharactersText.TextXAlignment = Enum.TextXAlignment.Left
+MiniCharactersText.Parent = Mini
+
+local MiniLinesLabel = Instance.new("TextLabel")
+MiniLinesLabel.Name = "LinesLabel"
+MiniLinesLabel.AnchorPoint = Vector2.new(1, 0)
+MiniLinesLabel.Size = UDim2.new(0.4, 0, 0, 15)
+MiniLinesLabel.BackgroundTransparency = 1
+MiniLinesLabel.Position = UDim2.new(1, -10, 0, 8)
+MiniLinesLabel.BorderSizePixel = 0
+MiniLinesLabel.FontSize = Enum.FontSize.Size12
+MiniLinesLabel.TextSize = 12
+MiniLinesLabel.RichText = true
+MiniLinesLabel.TextColor3 = Color3.fromRGB(188, 188, 188)
+MiniLinesLabel.Text = "None"
+MiniLinesLabel.TextWrapped = true
+MiniLinesLabel.Font = Enum.Font.GothamBold
+MiniLinesLabel.TextXAlignment = Enum.TextXAlignment.Right
+MiniLinesLabel.Parent = Mini
+
+local MiniCharactersLabel = Instance.new("TextLabel")
+MiniCharactersLabel.Name = "CharactersLabel"
+MiniCharactersLabel.AnchorPoint = Vector2.new(1, 0)
+MiniCharactersLabel.Size = UDim2.new(0.4, 0, 0, 15)
+MiniCharactersLabel.BackgroundTransparency = 1
+MiniCharactersLabel.Position = UDim2.new(1, -10, 0, 40)
+MiniCharactersLabel.BorderSizePixel = 0
+MiniCharactersLabel.FontSize = Enum.FontSize.Size12
+MiniCharactersLabel.TextSize = 12
+MiniCharactersLabel.RichText = true
+MiniCharactersLabel.TextColor3 = Color3.fromRGB(188, 188, 188)
+MiniCharactersLabel.Text = "None"
+MiniCharactersLabel.TextWrapped = true
+MiniCharactersLabel.Font = Enum.Font.GothamBold
+MiniCharactersLabel.TextXAlignment = Enum.TextXAlignment.Right
+MiniCharactersLabel.Parent = Mini
+
+---
+
 
 do --obviate 200 local limit
 	local UICorner21 = Instance.new("UICorner")
@@ -1439,6 +1331,24 @@ do --obviate 200 local limit
 	local UICorner = Instance.new("UICorner")
 	UICorner.CornerRadius = UDim.new(1, 0)
 	UICorner.Parent = CheckboxUncheckedDark
+	
+	local UIListLayout1 = Instance.new("UIListLayout")
+	UIListLayout1.HorizontalAlignment = Enum.HorizontalAlignment.Center
+	UIListLayout1.SortOrder = Enum.SortOrder.LayoutOrder
+	UIListLayout1.Padding = UDim.new(0, 6)
+	UIListLayout1.Parent = SettingsScrollingFrame
+
+	local UIPadding1 = Instance.new("UIPadding")
+	UIPadding1.PaddingTop = UDim.new(0, 10)
+	UIPadding1.PaddingBottom = UDim.new(0, 10)
+	UIPadding1.PaddingLeft = UDim.new(0, 10)
+	UIPadding1.PaddingRight = UDim.new(0, 10)
+	UIPadding1.Parent = SettingsScrollingFrame
+
+	local UIStroke9 = Instance.new("UIStroke")
+	UIStroke9.Thickness = 2
+	UIStroke9.Color = Color3.fromRGB(10, 10, 10)
+	UIStroke9.Parent = SettingsScrollingFrame
 
 	local UICornerColorEffectsButton = Instance.new("UICorner")
 	UICornerColorEffectsButton.CornerRadius = UDim.new(1, 0)
@@ -1458,6 +1368,10 @@ do --obviate 200 local limit
 	local UICorner3 = Instance.new("UICorner")
 	UICorner3.Parent = Frame
 	
+	local uiAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
+	uiAspectRatioConstraint.AspectRatio = 3
+	uiAspectRatioConstraint.Parent = warningsFrame
+
 	local UIStroke5 = Instance.new("UIStroke")
 	UIStroke5.Color = Color3.fromRGB(10, 10, 10)
 	UIStroke5.Parent = Frame1
@@ -1467,6 +1381,11 @@ do --obviate 200 local limit
 
 	local UICorner4 = Instance.new("UICorner")
 	UICorner4.Parent = Frame1
+	
+	local UISizeConstraint = Instance.new("UISizeConstraint")
+	UISizeConstraint.MinSize = Vector2.new(156, 156)
+	UISizeConstraint.MaxSize = Vector2.new(math.huge, 156)
+	UISizeConstraint.Parent = ColorEditorSub
 
 	local UIStroke6 = Instance.new("UIStroke")
 	UIStroke6.Color = Color3.fromRGB(10, 10, 10)
@@ -1502,6 +1421,10 @@ do --obviate 200 local limit
 	UIStroke10.Thickness = 2
 	UIStroke10.Color = Color3.fromRGB(10, 10, 10)
 	UIStroke10.Parent = Frame5
+	
+	local UIAspectRatioConstraint4 = Instance.new("UIAspectRatioConstraint")
+	UIAspectRatioConstraint4.AspectRatio = 3
+	UIAspectRatioConstraint4.Parent = Frame8
 
 	local UIAspectRatioConstraint2 = Instance.new("UIAspectRatioConstraint")
 	UIAspectRatioConstraint2.Parent = Frame6
@@ -1515,10 +1438,23 @@ do --obviate 200 local limit
 	UICorner8.CornerRadius = UDim.new(1, 0)
 	UICorner8.Parent = Frame5
 	
+	local UICornerWarningsButton = Instance.new("UICorner")
+	UICornerWarningsButton.CornerRadius = UDim.new(0, 8)
+	UICornerWarningsButton.Parent = WarningsButton
+
 	local UIStroke1 = Instance.new("UIStroke")
 	UIStroke1.Thickness = 2
 	UIStroke1.Color = Color3.fromRGB(10, 10, 10)
 	UIStroke1.Parent = ScriptScrollingFrame
+	
+	local UISizeConstraint2 = Instance.new("UISizeConstraint")
+	UISizeConstraint2.Parent = ScriptScrollingFrame
+	UISizeConstraint2.MinSize = Vector2.new(60, 38)
+	
+	local UIStroke20 = Instance.new("UIStroke")
+	UIStroke20.Thickness = 2
+	UIStroke20.Color = Color3.fromRGB(10, 10, 10)
+	UIStroke20.Parent = OpenScriptFrame
 
 	local UIStroke11 = Instance.new("UIStroke")
 	UIStroke11.Thickness = 2
@@ -1546,6 +1482,14 @@ do --obviate 200 local limit
 	UIStroke13.Color = Color3.fromRGB(10, 10, 10)
 	UIStroke13.Parent = Frame8
 	
+	local UICornerWarnings = Instance.new("UICorner")
+	UICornerWarnings.Parent = warningsFrame
+
+	local UIStrokeWarnings = Instance.new("UIStroke")
+	UIStrokeWarnings.Thickness = 2
+	UIStrokeWarnings.Color = Color3.fromRGB(10, 10, 10)
+	UIStrokeWarnings.Parent = warningsFrame
+
 	local UICornerToggleScriptVisibilityButton = Instance.new("UICorner")
 	UICornerToggleScriptVisibilityButton.CornerRadius = UDim.new(1, 0)
 	UICornerToggleScriptVisibilityButton.Parent = ToggleScriptVisibilityButton
@@ -1588,13 +1532,25 @@ do --obviate 200 local limit
 
 	local UICorner18 = Instance.new("UICorner")
 	UICorner18.Parent = SelectedTextBox
-	
-	local UICorner = Instance.new("UICorner")
-	UICorner.CornerRadius = UDim.new(1, 0)
-	UICorner.Parent = CheckboxCheckedLight
 end
 
 do 
+	local UISizeConstraintCharacters = Instance.new("UISizeConstraint")
+	UISizeConstraintCharacters.MinSize = Vector2.new(25, 0)
+	UISizeConstraintCharacters.Parent = MiniCharactersLabel
+
+	local UISizeConstraintMiniLines = Instance.new("UISizeConstraint")
+	UISizeConstraintMiniLines.MinSize = Vector2.new(25, 0)
+	UISizeConstraintMiniLines.Parent = MiniLinesLabel
+	
+	local UISizeConstraintSettingsButton = Instance.new("UISizeConstraint")
+	UISizeConstraintSettingsButton.MaxSize = Vector2.new(180, 100)
+	UISizeConstraintSettingsButton.Parent = SettingsButton
+	
+	local UISizeConstraintReturnButton = Instance.new("UISizeConstraint")
+	UISizeConstraintReturnButton.MaxSize = Vector2.new(180, 100)
+	UISizeConstraintReturnButton.Parent = ReturnToMainMenuButton
+
 	local UIStroke26 = Instance.new("UIStroke")
 	UIStroke26.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 	UIStroke26.Thickness = 2
@@ -1689,6 +1645,261 @@ do
 	local UICorner = Instance.new("UICorner")
 	UICorner.CornerRadius = UDim.new(1, 0)
 	UICorner.Parent = CheckboxUncheckedLight
+	
+	local UIListLayout2 = Instance.new("UIListLayout")
+	UIListLayout2.SortOrder = Enum.SortOrder.LayoutOrder
+	UIListLayout2.Padding = UDim.new(0, 6)
+	UIListLayout2.Parent = ColorEditorSub
+
+	local UIPadding2 = Instance.new("UIPadding")
+	UIPadding2.PaddingTop = UDim.new(0, 6)
+	UIPadding2.PaddingBottom = UDim.new(0, 6)
+	UIPadding2.PaddingLeft = UDim.new(0, 6)
+	UIPadding2.PaddingRight = UDim.new(0, 6)
+	UIPadding2.Parent = ColorEditorSub
+end
+
+do
+	local TextLabel10 = Instance.new("TextLabel")
+	TextLabel10.AnchorPoint = Vector2.new(0, 0.5)
+	TextLabel10.Size = UDim2.new(0, 120, 1, 0)
+	TextLabel10.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	TextLabel10.Position = UDim2.new(0, 135, 0.5, 0)
+	TextLabel10.BackgroundTransparency = 1
+	TextLabel10.TextSize = 14
+	TextLabel10.TextColor3 = Color3.fromRGB(188, 188, 188)
+	TextLabel10.Text = "On decrease"
+	TextLabel10.TextWrapped = true
+	TextLabel10.Font = Enum.Font.Gotham
+	TextLabel10.TextXAlignment = Enum.TextXAlignment.Left
+	TextLabel10.Parent = DecreaseFrame
+	
+	local TextLabel9 = Instance.new("TextLabel")
+	TextLabel9.AnchorPoint = Vector2.new(0, 0.5)
+	TextLabel9.Size = UDim2.new(0, 120, 1, 0)
+	TextLabel9.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	TextLabel9.Position = UDim2.new(0, 135, 0.5, 0)
+	TextLabel9.BackgroundTransparency = 1
+	TextLabel9.TextSize = 14
+	TextLabel9.TextColor3 = Color3.fromRGB(188, 188, 188)
+	TextLabel9.Text = "On increase"
+	TextLabel9.TextWrapped = true
+	TextLabel9.Font = Enum.Font.Gotham
+	TextLabel9.TextXAlignment = Enum.TextXAlignment.Left
+	TextLabel9.Parent = IncreaseFrame
+	
+	local TextLabel8 = Instance.new("TextLabel")
+	TextLabel8.AnchorPoint = Vector2.new(0, 0.5)
+	TextLabel8.Size = UDim2.new(0, 120, 1, 0)
+	TextLabel8.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	TextLabel8.Position = UDim2.new(0, 135, 0.5, 0)
+	TextLabel8.BackgroundTransparency = 1
+	TextLabel8.TextSize = 14
+	TextLabel8.TextColor3 = Color3.fromRGB(188, 188, 188)
+	TextLabel8.Text = "Script open"
+	TextLabel8.TextWrapped = true
+	TextLabel8.Font = Enum.Font.Gotham
+	TextLabel8.TextXAlignment = Enum.TextXAlignment.Left
+	TextLabel8.Parent = OpenScriptFrame
+
+	local TextLabel7 = Instance.new("TextLabel")
+	TextLabel7.AnchorPoint = Vector2.new(0, 0.5)
+	TextLabel7.Size = UDim2.new(0, 120, 1, 0)
+	TextLabel7.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	TextLabel7.Position = UDim2.new(0, 135, 0.5, 0)
+	TextLabel7.BackgroundTransparency = 1
+	TextLabel7.TextSize = 14
+	TextLabel7.TextColor3 = Color3.fromRGB(188, 188, 188)
+	TextLabel7.Text = "Selection"
+	TextLabel7.TextWrapped = true
+	TextLabel7.Font = Enum.Font.Gotham
+	TextLabel7.TextXAlignment = Enum.TextXAlignment.Left
+	TextLabel7.Parent = SelectedFrame
+	
+	local TextLabel4 = Instance.new("TextLabel")
+	TextLabel4.AnchorPoint = Vector2.new(0, 0.5)
+	TextLabel4.Size = UDim2.new(1, -100, 1, 0)
+	TextLabel4.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	TextLabel4.Position = UDim2.new(0, 96, 0.5, 0)
+	TextLabel4.BackgroundTransparency = 1
+	TextLabel4.TextSize = 14
+	TextLabel4.TextColor3 = Color3.fromRGB(188, 188, 188)
+	TextLabel4.Text = "Theme"
+	TextLabel4.TextWrapped = true
+	TextLabel4.Font = Enum.Font.Gotham
+	TextLabel4.TextXAlignment = Enum.TextXAlignment.Left
+	TextLabel4.Parent = Theme
+	
+	local TextLabel5 = Instance.new("TextLabel")
+	TextLabel5.AnchorPoint = Vector2.new(0, 0.5)
+	TextLabel5.Size = UDim2.new(1, -160, 1, 0)
+	TextLabel5.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	TextLabel5.Position = UDim2.new(0, 156, 0.5, 0)
+	TextLabel5.BackgroundTransparency = 1
+	TextLabel5.TextSize = 14
+	TextLabel5.TextColor3 = Color3.fromRGB(188, 188, 188)
+	TextLabel5.Text = "Order"
+	TextLabel5.TextWrapped = true
+	TextLabel5.Font = Enum.Font.Gotham
+	TextLabel5.TextXAlignment = Enum.TextXAlignment.Left
+	TextLabel5.Parent = Order
+	
+	local TextLabel6 = Instance.new("TextLabel")
+	TextLabel6.AnchorPoint = Vector2.new(0, 0.5)
+	TextLabel6.Size = UDim2.new(0, 120, 1, 0)
+	TextLabel6.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	TextLabel6.Position = UDim2.new(0, 135, 0.5, 0)
+	TextLabel6.BackgroundTransparency = 1
+	TextLabel6.TextSize = 14
+	TextLabel6.TextColor3 = Color3.fromRGB(188, 188, 188)
+	TextLabel6.Text = "Hover"
+	TextLabel6.TextWrapped = true
+	TextLabel6.Font = Enum.Font.Gotham
+	TextLabel6.TextXAlignment = Enum.TextXAlignment.Left
+	TextLabel6.Parent = HoverFrame
+	
+	local TextLabel = Instance.new("TextLabel")
+	TextLabel.AnchorPoint = Vector2.new(0, 0.5)
+	TextLabel.Size = UDim2.new(1, -100, 1, 0)
+	TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	TextLabel.Position = UDim2.new(0, 96, 0.5, 0)
+	TextLabel.BackgroundTransparency = 1
+	TextLabel.TextSize = 14
+	TextLabel.TextColor3 = Color3.fromRGB(188, 188, 188)
+	TextLabel.Text = "Factor"
+	TextLabel.TextWrapped = true
+	TextLabel.Font = Enum.Font.Gotham
+	TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+	TextLabel.Parent = Factor
+	
+	local TextLabel2 = Instance.new("TextLabel")
+	TextLabel2.AnchorPoint = Vector2.new(0, 0.5)
+	TextLabel2.Size = UDim2.new(1, -40, 1, 0)
+	TextLabel2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	TextLabel2.Position = UDim2.new(0, 28, 0.5, 0)
+	TextLabel2.BackgroundTransparency = 1
+	TextLabel2.TextSize = 14
+	TextLabel2.TextColor3 = Color3.fromRGB(188, 188, 188)
+	TextLabel2.Text = "Include whitespace characters"
+	TextLabel2.Font = Enum.Font.Gotham
+	TextLabel2.TextXAlignment = Enum.TextXAlignment.Left
+	TextLabel2.Parent = IncludeWhitespace
+	
+	local TextLabel1 = Instance.new("TextLabel")
+	TextLabel1.AnchorPoint = Vector2.new(0, 0.5)
+	TextLabel1.Size = UDim2.new(1, -40, 1, 0)
+	TextLabel1.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	TextLabel1.Position = UDim2.new(0, 28, 0.5, 0)
+	TextLabel1.BackgroundTransparency = 1
+	TextLabel1.TextSize = 14
+	TextLabel1.TextColor3 = Color3.fromRGB(188, 188, 188)
+	TextLabel1.Text = "Enable or disable by clicking on the list"
+	TextLabel1.TextTruncate = Enum.TextTruncate.AtEnd
+	TextLabel1.TextWrapped = true
+	TextLabel1.Font = Enum.Font.Gotham
+	TextLabel1.TextXAlignment = Enum.TextXAlignment.Left
+	TextLabel1.Parent = ToggleScriptVisibility
+	
+	local textLabel = Instance.new("TextLabel")
+	textLabel.AnchorPoint = Vector2.new(0, 0.5)
+	textLabel.Size = UDim2.new(1, -100, 1, 0)
+	textLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	textLabel.Position = UDim2.new(0, 96, 0.5, 0)
+	textLabel.BackgroundTransparency = 1
+	textLabel.TextSize = 14
+	textLabel.TextColor3 = Color3.fromRGB(188, 188, 188)
+	textLabel.Text = "Warnings"
+	textLabel.TextWrapped = true
+	textLabel.Font = Enum.Font.Gotham
+	textLabel.TextXAlignment = Enum.TextXAlignment.Left
+	textLabel.Parent = Warnings
+	
+
+	local TextLabel3 = Instance.new("TextLabel")
+	TextLabel3.AnchorPoint = Vector2.new(0, 0.5)
+	TextLabel3.Size = UDim2.new(1, -40, 1, 0)
+	TextLabel3.BorderColor3 = Color3.fromRGB(0, 0, 0)
+	TextLabel3.Position = UDim2.new(0, 28, 0.5, 0)
+	TextLabel3.BackgroundTransparency = 1
+	TextLabel3.TextSize = 14
+	TextLabel3.TextColor3 = Color3.fromRGB(188, 188, 188)
+	TextLabel3.Text = "Create color effects"
+	TextLabel3.TextWrapped = true
+	TextLabel3.Font = Enum.Font.Gotham
+	TextLabel3.TextXAlignment = Enum.TextXAlignment.Left
+	TextLabel3.Parent = ColorEffects
+	
+	local ListSettings1 = Instance.new("TextLabel")
+	ListSettings1.Name = "ReportText"
+	ListSettings1.LayoutOrder = 16
+	ListSettings1.ZIndex = 3
+	ListSettings1.AnchorPoint = Vector2.new(0, 0.5)
+	ListSettings1.Size = UDim2.new(1, 0, 0, 40)
+	ListSettings1.BackgroundTransparency = 1
+	ListSettings1.Position = UDim2.new(0, 0, 0, 10)
+	ListSettings1.TextTruncate = Enum.TextTruncate.AtEnd
+	ListSettings1.TextSize = 14
+	ListSettings1.RichText = true
+	ListSettings1.TextColor3 = Color3.fromRGB(188, 188, 188)
+	ListSettings1.TextYAlignment = Enum.TextYAlignment.Bottom
+	ListSettings1.Text = "Any issues? Report them to <b>@ProBaturay</b> through DevForum, via Roblox."
+	ListSettings1.TextWrapped = true
+	ListSettings1.Font = Enum.Font.Gotham
+	ListSettings1.Parent = SettingsScrollingFrame
+	
+
+	local ListSettings = Instance.new("TextLabel")
+	ListSettings.Name = "ListSettings"
+	ListSettings.LayoutOrder = 8
+	ListSettings.ZIndex = 3
+	ListSettings.AnchorPoint = Vector2.new(0, 0.5)
+	ListSettings.Size = UDim2.new(1, 0, 0, 40)
+	ListSettings.BackgroundTransparency = 1
+	ListSettings.Position = UDim2.new(0, 0, 0, 10)
+	ListSettings.TextTruncate = Enum.TextTruncate.AtEnd
+	ListSettings.TextSize = 14
+	ListSettings.TextColor3 = Color3.fromRGB(188, 188, 188)
+	ListSettings.TextYAlignment = Enum.TextYAlignment.Bottom
+	ListSettings.Text = "Script list"
+	ListSettings.TextWrapped = true
+	ListSettings.Font = Enum.Font.Gotham
+	ListSettings.TextXAlignment = Enum.TextXAlignment.Left
+	ListSettings.Parent = SettingsScrollingFrame
+
+	local WhileScriptingSettings = Instance.new("TextLabel")
+	WhileScriptingSettings.Name = "WhileScriptingSettings"
+	WhileScriptingSettings.LayoutOrder = 1
+	WhileScriptingSettings.ZIndex = 3
+	WhileScriptingSettings.AnchorPoint = Vector2.new(0, 0.5)
+	WhileScriptingSettings.Size = UDim2.new(1, 0, 0, 20)
+	WhileScriptingSettings.BackgroundTransparency = 1
+	WhileScriptingSettings.Position = UDim2.new(0, 0, 0, 10)
+	WhileScriptingSettings.TextTruncate = Enum.TextTruncate.AtEnd
+	WhileScriptingSettings.TextSize = 14
+	WhileScriptingSettings.TextColor3 = Color3.fromRGB(188, 188, 188)
+	WhileScriptingSettings.Text = "While scripting"
+	WhileScriptingSettings.TextWrapped = true
+	WhileScriptingSettings.Font = Enum.Font.Gotham
+	WhileScriptingSettings.TextXAlignment = Enum.TextXAlignment.Left
+	WhileScriptingSettings.Parent = SettingsScrollingFrame
+end
+
+do
+	local UICorner = Instance.new("UICorner")
+	UICorner.CornerRadius = UDim.new(1, 0)
+	UICorner.Parent = CheckboxCheckedLight
+
+	local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
+	UIAspectRatioConstraint.AspectRatio = 3
+	UIAspectRatioConstraint.Parent = IndicatorSubFrame
+
+	local UIStrokeMini = Instance.new("UIStroke")
+	UIStrokeMini.Thickness = 2
+	UIStrokeMini.Color = Color3.fromRGB(10, 10, 10)
+	UIStrokeMini.Parent = Mini
+
+	local UICornerMini = Instance.new("UICorner")
+	UICornerMini.Parent = Mini
 end
 
 for _, object in widget:GetDescendants() do
@@ -1730,6 +1941,8 @@ local textColorTweens: {Tween} = {}
 local currentTheme = "Dark"
 local AUTO_PLUGIN = "Auto"
 
+local FOCUSED_FRAME = nil
+
 local TInfo_TextHover = TweenInfo.new(
 	1,
 	Enum.EasingStyle.Quad,
@@ -1740,7 +1953,7 @@ local TInfo_TextHover = TweenInfo.new(
 )
 
 local TInfo_UISlide = TweenInfo.new(
-	0.4,
+	0.2,
 	Enum.EasingStyle.Quad,
 	Enum.EasingDirection.Out,
 	0,
@@ -1847,7 +2060,8 @@ local function retrieveSettings()
 			Indicator = IndicatorValue.Value
 		},
 		Plugin = {
-			Theme = ThemeValue.Value
+			Theme = ThemeValue.Value,
+			Warnings = WarningsValue.Value
 		}
 	}
 end
@@ -1900,6 +2114,12 @@ local function table_nextone<v>(tab: {[any]: v}, index: number): v
 	end
 end
 
+local function cwarn(...)
+	if WarningsValue.Value == "Enabled" then 
+		warn(...) 
+	end
+end
+
 local function isObjectSelected(object)
 	local objects = Selection:Get()
 
@@ -1942,6 +2162,13 @@ end
 
 local function getStudioTheme()
 	return (settings().Studio.Theme :: Instance).Name
+end
+
+local function setMiniEnablement(val)
+	Title.Visible = val
+	SubLabel.Visible = val
+	ScriptScrollingFrame.Visible = val
+	Mini.Visible = not val
 end
 
 local function changeTheme(theme: string?)	
@@ -2020,8 +2247,55 @@ local function calculateCanvasPosition(frame: Frame): Vector2
 	local totalScriptStatsLength = (examplesBefore * Directory.Size.Y.Offset)
 	local totalGapLength = (numberOfPaddings * (UIListLayout.Padding.Offset))
 	
-	local formula = Vector2.new(0, totalScriptStatsLength + Separator.Size.Y.Offset + Directory.Size.Y.Offset + (numberOfPaddings * (UIListLayout.Padding.Offset)) - (frame.Size.Y.Offset / 2) - UIPadding.PaddingTop.Offset)
+	local extraTwo = if IS_DOWN_MIN_WIDTH then -UIListLayout.Padding.Offset-frame.Size.Y.Offset / 2 else Separator.Size.Y.Offset + Directory.Size.Y.Offset
+	
+	local formula = Vector2.new(0, totalScriptStatsLength + extraTwo + (numberOfPaddings * (UIListLayout.Padding.Offset)) - (frame.Size.Y.Offset / 2) - UIPadding.PaddingTop.Offset)
 	return formula
+end
+
+
+
+local function setMiniLabels(l, c)
+	local function tweenLabel(label)
+		local function tween()
+			local tween = TweenService:Create(label, TInfo_TextHover, {TextColor3 = themeColors[currentTheme]["VaryingText"]})
+			tween:Play()
+			textColorTweens[label] = tween
+
+			tween.Completed:Connect(function()
+				textColorTweens[label] = nil
+
+				if tween.PlaybackState == Enum.PlaybackState.Completed then
+					label.TextColor3 = themeColors[currentTheme]["VaryingText"]
+				end
+			end)
+		end
+		
+		if CreateColorEffectsValue.Value then
+			if tonumber(label:GetAttribute("LastText")) and tonumber(label.Text) then
+				label.TextColor3 = if tonumber(label:GetAttribute("LastText")) > tonumber(label.Text) :: number then constants[3] elseif tonumber(label:GetAttribute("LastText")) < tonumber(label.Text) :: number then constants[4] else label.TextColor3
+
+				tween()
+			end
+		end
+	end
+	
+	MiniCharactersLabel:SetAttribute("LastText", MiniCharactersLabel.Text)
+	MiniCharactersLabel.Text = c
+	MiniLinesLabel:SetAttribute("LastText", MiniLinesLabel.Text)
+	MiniLinesLabel.Text = l
+	
+	tweenLabel(MiniCharactersLabel)
+	tweenLabel(MiniLinesLabel)
+end
+
+local function setCanvasPosition(frame)
+	if frame then
+		TweenService:Create(ScriptScrollingFrame, TInfo_UISlide, {CanvasPosition = calculateCanvasPosition(frame)}):Play()
+		FOCUSED_FRAME = frame
+		
+		setMiniLabels(frame.Lines.Text, frame.Characters.Text)
+	end
 end
 
 local function tryOpeningDoc(scr: LuaSourceContainer)
@@ -2030,7 +2304,7 @@ local function tryOpeningDoc(scr: LuaSourceContainer)
 	end)
 
 	if not s then
-		warn("Script" .. scr.Name .. " could not be opened:", e)
+		cwarn("Script" .. scr.Name .. " could not be opened:", e)
 	end
 end
 
@@ -2058,9 +2332,12 @@ local function setSelectionState(scr: Script, frame: Frame)
 	local pos = table.find(objects, scr)
 		
 	if pos then
+		FOCUSED_FRAME = nil
+		setMiniLabels("None", "None")
+
 		table.remove(objects, pos)
 		frame:SetAttribute("ExcludeThemeRule", false)
-		
+				
 		if ToggleScriptVisibilityValue.Value then
 			local s, e = pcall(function()
 				local doc = findDocFromScript(scr)
@@ -2068,12 +2345,13 @@ local function setSelectionState(scr: Script, frame: Frame)
 			end)
 			
 			if not s then
-				warn("Script could not be closed:", e)
+				cwarn("Script could not be closed:", e)
 			end
 		end
 	else
+		setCanvasPosition(frame)
+		
 		if ToggleScriptVisibilityValue.Value then
-			TweenService:Create(ScriptScrollingFrame, TInfo_UISlide, {CanvasPosition = calculateCanvasPosition(frame)}):Play()
 			tryOpeningDoc(scr)
 		end
 		
@@ -2348,7 +2626,7 @@ local function insert(scr: nLuaSourceContainer)
 
 			setStrokeState(true)
 		end)
-
+		
 		newFrame.MouseLeave:Connect(function()
 			hovered = true
 			setStrokeState(false)
@@ -2392,6 +2670,10 @@ local function insert(scr: nLuaSourceContainer)
 				adjustScriptStats()
 				changeLayoutOrder(OrderValue.Value)
 			end)()
+			
+			if FOCUSED_FRAME == newFrame then
+				setMiniLabels(tab["Lines"].Text, tab["Characters"].Text)
+			end
 		end
 
 		set()
@@ -2472,7 +2754,7 @@ local function findFrameAndSetCanvasPosition(doc: ScriptDocument)
 	local frame = findFrameByDoc(doc)
 	
 	if frame then
-		TweenService:Create(ScriptScrollingFrame, TInfo_UISlide, {CanvasPosition = calculateCanvasPosition(frame)}):Play()
+		setCanvasPosition(frame)
 	end
 end
 
@@ -2498,6 +2780,11 @@ local function parseTextBox(textBox): Color3?
 	return nil
 end
 
+local function returnToMainMenu()
+	TweenService:Create(SettingsMenu, TInfo_UISlide, {Position = UDim2.fromScale(2, MainMenu.Position.Y.Scale)}):Play()
+	TweenService:Create(MainMenu, TInfo_UISlide, {Position = UDim2.fromScale(0.5, MainMenu.Position.Y.Scale)}):Play()
+end
+
 --| Events
 
 Selection.SelectionChanged:Connect(function()
@@ -2521,8 +2808,7 @@ SettingsButton.Activated:Connect(function()
 end)
 	
 ReturnToMainMenuButton.Activated:Connect(function()
-	TweenService:Create(SettingsMenu, TInfo_UISlide, {Position = UDim2.fromScale(2, MainMenu.Position.Y.Scale)}):Play()
-	TweenService:Create(MainMenu, TInfo_UISlide, {Position = UDim2.fromScale(0.5, MainMenu.Position.Y.Scale)}):Play()
+	returnToMainMenu()
 end)
 
 ScriptScrollingFrame.DescendantAdded:Connect(changeLayoutOrder)
@@ -2552,6 +2838,8 @@ StudioService:GetPropertyChangedSignal("ActiveScript"):Connect(function()
 	
 	if doc then
 		findFrameAndSetCanvasPosition(doc)
+	else
+		setMiniLabels("None", "None")
 	end
 end)
 
@@ -2604,6 +2892,11 @@ ThemeButton.Activated:Connect(function()
 	themeBeingSet = false
 end)
 
+WarningsButton.Activated:Connect(function()
+	WarningsButton.Text = if WarningsValue.Value == "Enabled" then "Disabled" else "Enabled"
+	WarningsValue.Value = if WarningsValue.Value == "Enabled" then "Disabled" else "Enabled"
+end)
+
 DefaultButton.Activated:Connect(function()
 	HoverValue.Value = defaultColors[2]
 	OpenScriptValue.Value = defaultColors[5]
@@ -2616,6 +2909,10 @@ ThemeValue.Changed:Connect(function(newVal)
 	if not themeBeingSet then
 		setTheme(newVal)
 	end
+end)
+
+WarningsValue.Changed:Connect(function()
+	WarningsButton.Text = WarningsValue.Value
 end)
 
 IndicatorButton.Activated:Connect(function()
@@ -2656,6 +2953,40 @@ OrderValue.Changed:Connect(function(val)
 end)
 
 game.DescendantAdded:Connect(insert)
+
+widget:GetPropertyChangedSignal("AbsoluteSize"):Connect(function()
+	if widget.AbsoluteSize.X < minWidth or widget.AbsoluteSize.Y < minHeight then
+		Stats_.Visible = false
+		SettingsButton.Visible = false
+	else
+		Stats_.Visible = true
+	end
+	
+	local function f(val)
+		setCanvasPosition(FOCUSED_FRAME)
+		IS_DOWN_MIN_WIDTH = val
+		Directory.Visible = not val
+		Separator.Visible = not val
+		SettingsButton.Visible = not val
+		
+		if widget.AbsoluteSize.Y < 185 or not Stats_.Visible then
+			SettingsButton.Visible = false
+		end
+	end
+	
+	if widget.AbsoluteSize.X < minWidth then
+		f(true)
+	else
+		f(false)
+	end
+	
+	if widget.AbsoluteSize.X < 331 then
+		returnToMainMenu()
+	end
+	
+	setMiniEnablement(if widget.AbsoluteSize.X < miniWidth or widget.AbsoluteSize.Y < miniHeight then false else true)
+	ReminderLabel.Visible = if widget.AbsoluteSize.Y < 164 then false elseif (widget.AbsoluteSize.X > 150 or widget.AbsoluteSize.Y > 180) and (widget.AbsoluteSize.X < minWidth or widget.AbsoluteSize.Y < minHeight) then true else false
+end)
 
 for i, settingsValue: nValueBase in SettingsFolder:GetDescendants() do
 	if settingsValue:IsA("ValueBase") then
@@ -2722,6 +3053,7 @@ if not settingsSaved or testActive then
 	CreateColorEffectsValue.Value = true
 		
 	ThemeValue.Value = AUTO_PLUGIN
+	WarningsValue.Value = "Enabled"
 	
 	OrderValue.Value = "Random"
 	FactorValue.Value = "Name"
@@ -2762,6 +3094,18 @@ for i, document: ScriptDocument in ScriptEditorService:GetScriptDocuments() do
 	changeDocFrameBackground(document, true)
 end
 
+if StudioService.ActiveScript then
+	-- Unlikely to run because after the installment of plugin, StudioService.ActiveScript goes nil
+	findFrameAndSetCanvasPosition(StudioService.ActiveScript)
+end
+
 changeTheme(nil)
 changeObjectCounters()
 refreshCheckboxes()
+
+while true do
+	ReminderLabel.Text = reminderCycle[1]
+	task.wait(10)
+	ReminderLabel.Text = reminderCycle[2]
+	task.wait(10)
+end
